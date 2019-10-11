@@ -16,7 +16,7 @@ class TextureEntities(enum.Enum):
 
 
 @enum.unique
-class Direction(enum.Enum):
+class Ordinal(enum.Enum):
     EAST = 0
     NORTH = 1
     WEST = 2

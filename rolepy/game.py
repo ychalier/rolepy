@@ -5,7 +5,7 @@ import time
 import sys
 from rolepy.misc import Position
 from rolepy.model import World
-from rolepy.globals import Direction
+from rolepy.globals import Ordinal
 from rolepy.graphics import Render
 from rolepy.graphics import MoveCamera
 from rolepy.graphics import TileManager
@@ -54,22 +54,22 @@ class Game:
                         sys.exit()
                     elif event.key == pygame.locals.K_UP:
                         if not self.camera_is_moving:
-                            player_tile.direction = Direction.NORTH
+                            player_tile.direction = Ordinal.NORTH
                             MoveCamera(self, self.camera
                                        + Position(0, 1), 32, .2).start()
                     elif event.key == pygame.locals.K_DOWN:
                         if not self.camera_is_moving:
-                            player_tile.direction = Direction.SOUTH
+                            player_tile.direction = Ordinal.SOUTH
                             MoveCamera(self, self.camera
                                        + Position(0, -1), 32, .2).start()
                     elif event.key == pygame.locals.K_LEFT:
                         if not self.camera_is_moving:
-                            player_tile.direction = Direction.WEST
+                            player_tile.direction = Ordinal.WEST
                             MoveCamera(self, self.camera
                                        + Position(-1, 0), 32, .2).start()
                     elif event.key == pygame.locals.K_RIGHT:
                         if not self.camera_is_moving:
-                            player_tile.direction = Direction.EAST
+                            player_tile.direction = Ordinal.EAST
                             MoveCamera(self, self.camera
                                        + Position(1, 0), 32, .2).start()
             if time.time() - last_frame > 1 / self.settings.max_fps:
