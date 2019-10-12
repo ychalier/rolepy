@@ -22,6 +22,9 @@ class Position:
     def __str__(self):
         return "({x}, {y})".format(x=self.x, y=self.y)
 
+    def __mul__(self, other):
+        return Position(self.x * other.x, self.y * other.y)
+
     def __rmul__(self, other):
         return Position(other * self.x, other * self.y)
 

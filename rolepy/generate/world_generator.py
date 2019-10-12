@@ -16,5 +16,5 @@ class WorldGenerator:
     def __getitem__(self, position):
         self.biome_map.build([position])
         if self.biome_map[position] in [Biome.PLAIN, Biome.FOREST]:
-            return TextureTerrain.GRASS
-        return TextureTerrain.PAVED_ROAD
+            return [TextureTerrain.GRASS]
+        return [TextureTerrain.PAVED_ROAD]

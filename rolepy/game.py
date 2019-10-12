@@ -9,6 +9,7 @@ from rolepy.globals import Ordinal
 from rolepy.graphics import Render
 from rolepy.graphics import MoveCamera
 from rolepy.graphics import TileManager
+from rolepy.graphics import WorldSurface
 
 
 class Game:
@@ -22,6 +23,7 @@ class Game:
         self.world = World()
         self.camera = Position(0, 0)
         self.camera_is_moving = False
+        self.world_surface = WorldSurface()
 
     def load(self):
         logging.info("Loading game")
@@ -30,6 +32,7 @@ class Game:
         self.tile_manager.load()
         logging.debug("Loading world")
         self.world.load()
+        self.world_surface.build(self.tile_manager, self.world)
         logging.info("Done loading, took {elapsed} seconds".format(
             elapsed=time.time() - t_start))
 
