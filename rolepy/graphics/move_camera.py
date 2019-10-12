@@ -2,6 +2,7 @@ import time
 from rolepy.misc import AsyncTask
 from rolepy.misc import Position
 from rolepy.globals import WalkAnimation
+from rolepy.globals import SPRITE_SIZE
 
 
 def cycle():
@@ -14,7 +15,7 @@ def cycle():
 
 class MoveCamera(AsyncTask):
 
-    def __init__(self, game, dest, steps, duration, anim_step=10):
+    def __init__(self, game, dest, duration, steps=SPRITE_SIZE, anim_step=10):
         def function():
             game.camera_is_moving = True
             player_tile = game.tile_manager.entities[game.world.player]

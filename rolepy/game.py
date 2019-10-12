@@ -59,22 +59,22 @@ class Game:
                         if not self.camera_is_moving:
                             player_tile.direction = Ordinal.NORTH
                             MoveCamera(self, self.camera
-                                       + Position(0, 1), 32, .2).start()
+                                       + Position(0, 1), .2).start()
                     elif event.key == pygame.locals.K_DOWN:
                         if not self.camera_is_moving:
                             player_tile.direction = Ordinal.SOUTH
                             MoveCamera(self, self.camera
-                                       + Position(0, -1), 32, .2).start()
+                                       + Position(0, -1), .2).start()
                     elif event.key == pygame.locals.K_LEFT:
                         if not self.camera_is_moving:
                             player_tile.direction = Ordinal.WEST
                             MoveCamera(self, self.camera
-                                       + Position(-1, 0), 32, .2).start()
+                                       + Position(-1, 0), .2).start()
                     elif event.key == pygame.locals.K_RIGHT:
                         if not self.camera_is_moving:
                             player_tile.direction = Ordinal.EAST
                             MoveCamera(self, self.camera
-                                       + Position(1, 0), 32, .2).start()
+                                       + Position(1, 0), .2).start()
             if time.time() - last_frame > 1 / self.settings.max_fps:
                 rendering = Render(self)
                 rendering.start()
