@@ -36,4 +36,8 @@ class WorldGenerator:
             choice = self.choose_version(position, [None, TextureTerrain.TREE_LARGE, TextureTerrain.TREE_SMALL], 100)
             if choice is not None:
                 layers.append(choice)
+        if biome == Biome.MOUNTAIN:
+            choice = self.choose_version(position, [None, TextureTerrain.GRASS_MOUNTAIN])
+            if choice is not None:
+                layers = [choice]
         return layers
