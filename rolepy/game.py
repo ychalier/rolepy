@@ -4,6 +4,7 @@ import pygame.locals
 import time
 import sys
 from rolepy.misc import Position
+from rolepy.misc import Fifo
 from rolepy.model import World
 from rolepy.globals import Ordinal
 from rolepy.graphics import Render
@@ -24,12 +25,15 @@ class Game:
         self.camera = Position(0, 0)
         self.camera_is_moving = False
         self.world_surface = WorldSurface()
+        self.font = None
 
     def load(self):
         logging.info("Loading game")
         t_start = time.time()
         logging.debug("Loading sprites")
         self.tile_manager.load()
+        logging.debug("Loading fonts")
+        self.font = pygame.font.SysFont("consolas", 20)
         logging.debug("Loading world")
         self.world.load()
         self.world_surface.build(self.tile_manager, self.world)
@@ -46,6 +50,7 @@ class Game:
         last_frame = time.time()
         logging.debug("Entering main loop")
         player_tile = self.tile_manager.entities[self.world.player]
+        fps = Fifo(100)
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -75,8 +80,13 @@ class Game:
                             player_tile.direction = Ordinal.EAST
                             MoveCamera(self, self.camera
                                        + Position(1, 0), .2).start()
-            if time.time() - last_frame > 1 / self.settings.max_fps:
-                rendering = Render(self)
+            now = time.time()
+            if self.settings.max_fps is None or now - last_frame > 1 / self.settings.max_fps:
+                if now == last_frame:
+                    fps.add(1e3)
+                else:
+                    fps.add(1 / (now - last_frame))
+                rendering = Render(self, fps.mean)
                 rendering.start()
                 rendering.join()
-                last_frame = time.time()
+                last_frame = now
