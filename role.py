@@ -12,6 +12,7 @@ if __name__ == "__main__":
     pygame.init()
     logging.debug("Done initializing PyGame")
     settings = Settings()
+    settings.load("settings.txt")
     game = Game(settings)
     game.load()
     game.start()
