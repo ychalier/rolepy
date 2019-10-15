@@ -127,3 +127,5 @@ dmypy.json
 
 # Database
 db.sqlite3
+
+*.ipynb
