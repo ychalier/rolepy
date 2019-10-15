@@ -11,6 +11,8 @@ from rolepy.graphics import Render
 from rolepy.graphics import MoveCamera
 from rolepy.graphics import TileManager
 from rolepy.graphics import WorldSurface
+from rolepy.graphics import Interface
+from rolepy.graphics import InterfaceBox
 
 
 class Game:
@@ -25,7 +27,8 @@ class Game:
         self.camera = Position(0, 0)
         self.camera_is_moving = False
         self.world_surface = WorldSurface(self.tile_manager, self.world)
-        self.font = None
+        self.interface = Interface(self.settings.resolution)
+        self.fps_interface_box = InterfaceBox(self.interface, 77, 29)
         self.is_moving = False
         self.movements = {
             Ordinal.EAST: False,
@@ -41,7 +44,8 @@ class Game:
         logging.debug("Loading sprites")
         self.tile_manager.load()
         logging.debug("Loading fonts")
-        self.font = pygame.font.SysFont("consolas", 20)
+        self.interface.load()
+        self.interface.boxes[Position(8, 8)] = self.fps_interface_box
         logging.debug("Loading world")
         self.world.load()
         self.world_surface.build()
@@ -95,7 +99,8 @@ class Game:
                     fps.add(1e3)
                 else:
                     fps.add(1 / (now - last_frame))
-                rendering = Render(self, fps.mean)
+                self.fps_interface_box.update("fps: {}".format(round(fps.mean)))
+                rendering = Render(self)
                 rendering.start()
                 rendering.join()
                 last_frame = now

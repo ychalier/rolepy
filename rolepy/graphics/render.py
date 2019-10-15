@@ -6,7 +6,7 @@ from rolepy.globals import SPRITE_SIZE
 
 class Render(AsyncTask):
 
-    def __init__(self, game, fps):
+    def __init__(self, game):
         def function():
             game.screen.fill((0, 0, 0))
             width, height = game.settings.resolution
@@ -24,7 +24,6 @@ class Render(AsyncTask):
                 game.tile_manager.entities[game.world.player].sprite(),
                 (width / 2 - SPRITE_SIZE / 2, height / 2 - SPRITE_SIZE / 2)
             )
-            label = game.font.render("fps: {}".format(round(fps)), 1, (255, 255, 255))
-            game.screen.blit(label, (8, 8))
+            game.interface.blit(game.screen)
             pygame.display.flip()
         AsyncTask.__init__(self, function)

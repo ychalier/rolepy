@@ -9,7 +9,7 @@ class WorldSurface:
     def __init__(self, tile_manager, world):
         self.tile_manager = tile_manager
         self.world = world
-        self.surface = pygame.Surface((0, 0), pygame.SRCALPHA, 32)
+        self.surface = pygame.Surface((0, 0), pygame.SRCALPHA | pygame.HWSURFACE, 32)
         self.offset_x = 0
         self.offset_y = 0
         self.is_checking = False

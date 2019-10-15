@@ -7,3 +7,5 @@ from .render import Render
 from .load_world import LoadWorld
 from .move_camera import MoveCamera
 from .world_surface import WorldSurface
+from .interface import Interface
+from .interface_box import InterfaceBox
