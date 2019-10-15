@@ -10,23 +10,15 @@ class Render(AsyncTask):
         def function():
             game.screen.fill((0, 0, 0))
             width, height = game.settings.resolution
-            # world_surface_position = Position(width // 2, height // 2) \
-            #     + SPRITE_SIZE * (.5 * Position(-1, 1)\
-            #         - Position(1, -1) * game.camera\
-            #         - Position(
-            #             game.world_surface.offset_x,
-            #             game.world_surface.offset_y
-            #             )
-            #         )
             position = SPRITE_SIZE * (
-                    Position(1, -1) * game.camera
+                    game.camera
                     + .5 * Position(1, 1)
                     + Position(game.world_surface.offset_x, game.world_surface.offset_y)
                 ) - Position(width // 2, height // 2)
             game.screen.blit(
                 game.world_surface.surface,
-                (0, 0), # world_surface_position.pair(),
-                area=(position.x, position.y, width, height)
+                (0, 0),
+                area=(*position.pair(), width, height)
             )
             game.screen.blit(
                 game.tile_manager.entities[game.world.player].sprite(),

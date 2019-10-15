@@ -24,7 +24,7 @@ class Game:
         self.world = World()
         self.camera = Position(0, 0)
         self.camera_is_moving = False
-        self.world_surface = WorldSurface()
+        self.world_surface = WorldSurface(self.tile_manager, self.world)
         self.font = None
 
     def load(self):
@@ -36,7 +36,7 @@ class Game:
         self.font = pygame.font.SysFont("consolas", 20)
         logging.debug("Loading world")
         self.world.load()
-        self.world_surface.build(self.tile_manager, self.world)
+        self.world_surface.build()
         logging.info("Done loading, took {elapsed} seconds".format(
             elapsed=time.time() - t_start))
 
@@ -64,12 +64,12 @@ class Game:
                         if not self.camera_is_moving:
                             player_tile.direction = Ordinal.NORTH
                             MoveCamera(self, self.camera
-                                       + Position(0, 1), .2).start()
+                                       + Position(0, -1), .2).start()
                     elif event.key == pygame.locals.K_DOWN:
                         if not self.camera_is_moving:
                             player_tile.direction = Ordinal.SOUTH
                             MoveCamera(self, self.camera
-                                       + Position(0, -1), .2).start()
+                                       + Position(0, 1), .2).start()
                     elif event.key == pygame.locals.K_LEFT:
                         if not self.camera_is_moving:
                             player_tile.direction = Ordinal.WEST

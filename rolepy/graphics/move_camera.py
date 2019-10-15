@@ -3,6 +3,7 @@ from rolepy.misc import AsyncTask
 from rolepy.misc import Position
 from rolepy.globals import WalkAnimation
 from rolepy.globals import SPRITE_SIZE
+from rolepy.graphics import LoadWorld
 
 
 def cycle():
@@ -22,6 +23,7 @@ class MoveCamera(AsyncTask):
             source = Position(*game.camera.pair())
             delay = float(duration) / float(steps + 1)
             iterator = cycle()
+            LoadWorld(game, dest).start()
             for step in range(steps + 1):
                 if step % anim_step == 0:
                     player_tile.walk_animation = next(iterator)
