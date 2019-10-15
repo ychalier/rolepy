@@ -49,3 +49,10 @@ class WalkAnimation(enum.Enum):
     LEFT = 0
     REST = 1
     RIGHT = 2
+
+    def cycle():
+        while True:
+            yield WalkAnimation.LEFT
+            yield WalkAnimation.REST
+            yield WalkAnimation.RIGHT
+            yield WalkAnimation.REST

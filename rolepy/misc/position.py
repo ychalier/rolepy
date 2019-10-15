@@ -36,3 +36,7 @@ class Position:
 
     def pair(self):
         return [self.x, self.y]
+
+    def round(self):
+        self.x = round(self.x)
+        self.y = round(self.y)

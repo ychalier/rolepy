@@ -26,6 +26,14 @@ class Game:
         self.camera_is_moving = False
         self.world_surface = WorldSurface(self.tile_manager, self.world)
         self.font = None
+        self.is_moving = False
+        self.movements = {
+            Ordinal.EAST: False,
+            Ordinal.NORTH: False,
+            Ordinal.WEST: False,
+            Ordinal.SOUTH: False
+        }
+        self.speed = 5
 
     def load(self):
         logging.info("Loading game")
@@ -50,7 +58,7 @@ class Game:
         last_frame = time.time()
         logging.debug("Entering main loop")
         player_tile = self.tile_manager.entities[self.world.player]
-        fps = Fifo(100)
+        fps = Fifo(10)
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -61,25 +69,26 @@ class Game:
                         logging.info("Exiting from ESC key pressed")
                         sys.exit()
                     elif event.key == pygame.locals.K_UP:
-                        if not self.camera_is_moving:
-                            player_tile.direction = Ordinal.NORTH
-                            MoveCamera(self, self.camera
-                                       + Position(0, -1), .2).start()
+                        MoveCamera(self, Ordinal.NORTH).start()
                     elif event.key == pygame.locals.K_DOWN:
-                        if not self.camera_is_moving:
-                            player_tile.direction = Ordinal.SOUTH
-                            MoveCamera(self, self.camera
-                                       + Position(0, 1), .2).start()
+                        MoveCamera(self, Ordinal.SOUTH).start()
                     elif event.key == pygame.locals.K_LEFT:
-                        if not self.camera_is_moving:
-                            player_tile.direction = Ordinal.WEST
-                            MoveCamera(self, self.camera
-                                       + Position(-1, 0), .2).start()
+                        MoveCamera(self, Ordinal.WEST).start()
                     elif event.key == pygame.locals.K_RIGHT:
-                        if not self.camera_is_moving:
-                            player_tile.direction = Ordinal.EAST
-                            MoveCamera(self, self.camera
-                                       + Position(1, 0), .2).start()
+                        MoveCamera(self, Ordinal.EAST).start()
+                    elif event.key == pygame.locals.K_LSHIFT:
+                        self.speed = 10
+                elif event.type == pygame.KEYUP:
+                    if event.key == pygame.locals.K_UP:
+                        self.movements[Ordinal.NORTH] = False
+                    elif event.key == pygame.locals.K_DOWN:
+                        self.movements[Ordinal.SOUTH] = False
+                    elif event.key == pygame.locals.K_LEFT:
+                        self.movements[Ordinal.WEST] = False
+                    elif event.key == pygame.locals.K_RIGHT:
+                        self.movements[Ordinal.EAST] = False
+                    elif event.key == pygame.locals.K_LSHIFT:
+                        self.speed = 5
             now = time.time()
             if self.settings.max_fps is None or now - last_frame > 1 / self.settings.max_fps:
                 if now == last_frame:

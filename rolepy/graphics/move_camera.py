@@ -1,36 +1,46 @@
 import time
 from rolepy.misc import AsyncTask
 from rolepy.misc import Position
+from rolepy.globals import Ordinal
 from rolepy.globals import WalkAnimation
 from rolepy.globals import SPRITE_SIZE
 from rolepy.graphics import LoadWorld
 
-
-def cycle():
-    while True:
-        yield WalkAnimation.LEFT
-        yield WalkAnimation.REST
-        yield WalkAnimation.RIGHT
-        yield WalkAnimation.REST
-
-
 class MoveCamera(AsyncTask):
 
-    def __init__(self, game, dest, duration, steps=SPRITE_SIZE, anim_step=10):
+    def __init__(self, game, direction):
+        iterator = WalkAnimation.cycle()
+        player = game.tile_manager.entities[game.world.player]
         def function():
-            game.camera_is_moving = True
-            player_tile = game.tile_manager.entities[game.world.player]
-            source = Position(*game.camera.pair())
-            delay = float(duration) / float(steps + 1)
-            iterator = cycle()
-            LoadWorld(game, dest).start()
-            for step in range(steps + 1):
-                if step % anim_step == 0:
-                    player_tile.walk_animation = next(iterator)
-                progress = float(step) / float(steps)
-                game.camera.x = source.x * (1 - progress) + dest.x * progress
-                game.camera.y = source.y * (1 - progress) + dest.y * progress
-                time.sleep(delay)
-            game.camera_is_moving = False
-            player_tile.walk_animation = WalkAnimation.REST
+            if game.is_moving:
+                return
+            game.is_moving = True
+            game.movements[direction] = True
+            player.direction = direction
+            while game.movements[direction]:
+                duration = 1 / game.speed
+                source = Position(*game.camera.pair())
+                if direction == Ordinal.NORTH:
+                    destination = source + Position(0, -1)
+                elif direction == Ordinal.SOUTH:
+                    destination = source + Position(0, 1)
+                elif direction == Ordinal.WEST:
+                    destination = source + Position(-1, 0)
+                elif direction == Ordinal.EAST:
+                    destination = source + Position(1, 0)
+                start = time.time()
+                last = start
+                progress = 0
+                LoadWorld(game, destination).start()
+                while progress < 1:
+                    current = time.time()
+                    progress = min(1, (current - start) / duration)
+                    game.camera = (1 - progress) * source + progress * destination
+                    if current - last > duration / 4:
+                        player.walk_animation = next(iterator)
+                        last = current
+                    time.sleep(duration / 25)
+            game.camera.round()
+            player.walk_animation = WalkAnimation.REST
+            game.is_moving = False
         AsyncTask.__init__(self, function)
