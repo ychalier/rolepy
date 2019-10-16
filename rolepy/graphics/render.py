@@ -21,7 +21,7 @@ class Render(AsyncTask):
                 area=(*position.pair(), width, height)
             )
             game.screen.blit(
-                game.tile_manager.entities[game.world.player].sprite(),
+                game.tile_manager.entities[game.world.player.texture].sprite(),
                 (width / 2 - SPRITE_SIZE / 2, height / 2 - SPRITE_SIZE / 2)
             )
             game.interface.blit(game.screen)

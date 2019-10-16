@@ -67,7 +67,7 @@ class Game:
         self.clock = pygame.time.Clock()
         last_frame = time.time()
         logging.debug("Entering main loop")
-        player_tile = self.tile_manager.entities[self.world.player]
+        player_tile = self.tile_manager.entities[self.world.player.texture]
         fps = Fifo(10)
         while True:
             for event in pygame.event.get():

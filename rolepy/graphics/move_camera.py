@@ -10,7 +10,7 @@ class MoveCamera(AsyncTask):
 
     def __init__(self, game, direction):
         iterator = WalkAnimation.cycle()
-        player = game.tile_manager.entities[game.world.player]
+        player = game.tile_manager.entities[game.world.player.texture]
         def function():
             if game.is_moving:
                 return
