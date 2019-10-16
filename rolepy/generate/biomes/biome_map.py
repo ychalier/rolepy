@@ -20,26 +20,6 @@ class BiomeMap(dict):
         i, j = position
         return set([(i - 1, j), (i + 1, j), (i, j - 1), (i, j + 1)])
 
-    def get_zones(self):
-        remaining = set(self.keys())
-        zones = list()
-        while len(remaining) > 0:
-            current = remaining.pop()
-            zone = Zone(self[current])
-            buffer = set()
-            buffer.add(current)
-            while len(buffer) > 0:
-                p = buffer.pop()
-                zone.add(p)
-                for neighbor in self.get_neighbors(p).intersection(remaining):
-                    remaining.remove(neighbor)
-                    if self[neighbor] == zone.biome:
-                        buffer.add(neighbor)
-                    else:
-                        zone.frontier.append(neighbor)
-            zones.append(zone)
-        return zones
-
     def to_array(self):
         ordinates = [key[0] for key in self.keys()]
         abscissa = [key[1] for key in self.keys()]

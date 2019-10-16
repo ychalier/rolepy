@@ -6,6 +6,7 @@ import sys
 from rolepy.misc import Position
 from rolepy.misc import Fifo
 from rolepy.model import World
+from rolepy.model import DetectZone
 from rolepy.globals import Ordinal
 from rolepy.graphics import Render
 from rolepy.graphics import MoveCamera
@@ -29,7 +30,9 @@ class Game:
         self.world_surface = WorldSurface(self.tile_manager, self.world)
         self.interface = Interface(self.settings.resolution)
         self.fps_interface_box = InterfaceBox(self.interface, 77, 29)
+        self.zone_interface_box = InterfaceBox(self.interface, 151, 29)
         self.is_moving = False
+        self.is_detecting_zone = False
         self.movements = {
             Ordinal.EAST: False,
             Ordinal.NORTH: False,
@@ -46,6 +49,7 @@ class Game:
         logging.debug("Loading fonts")
         self.interface.load()
         self.interface.boxes[Position(8, 8)] = self.fps_interface_box
+        self.interface.boxes[Position(8, self.settings.resolution[1] - 37)] = self.zone_interface_box
         logging.debug("Loading world")
         self.world.load()
         self.world_surface.build()
@@ -100,6 +104,8 @@ class Game:
                 else:
                     fps.add(1 / (now - last_frame))
                 self.fps_interface_box.update("fps: {}".format(round(fps.mean)))
+                if not self.is_detecting_zone:
+                    DetectZone(self, *self.camera.pair()).start()
                 rendering = Render(self)
                 rendering.start()
                 rendering.join()

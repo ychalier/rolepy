@@ -10,10 +10,6 @@ class Zone:
         self.frontier = list()
         self.inside = list()
         self.name = ""
-        if self.biome == Biome.MOUNTAIN:
-            self.name = MountainNameGenerator.get()
-        elif self.biome == Biome.FOREST:
-            self.name = ForestNameGenerator.get()
         self.size = 0
 
     def __repr__(self):
@@ -22,6 +18,14 @@ class Zone:
             size=self.size,
             name=self.name
         )
+
+    def find_name(self):
+        i, j = self.barycenter()
+        seed = str(i) + str(j)
+        if self.biome == Biome.MOUNTAIN:
+            self.name = MountainNameGenerator.get(seed)
+        elif self.biome == Biome.FOREST:
+            self.name = ForestNameGenerator.get(seed)
 
     def add(self, position):
         self.inside.append(position)
