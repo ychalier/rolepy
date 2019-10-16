@@ -130,3 +130,4 @@ db.sqlite3
 
 *.ipynb
 settings.txt
+draft/

@@ -61,6 +61,8 @@ class Game:
                       + str(self.settings.resolution))
         self.screen = pygame.display.set_mode(
             self.settings.resolution, pygame.DOUBLEBUF | pygame.HWSURFACE)
+        pygame.display.set_caption("RolePy")
+        pygame.display.set_icon(pygame.image.load("assets/logo.png"))
         pygame.key.set_repeat(self.settings.key_repeat_delay)
         self.clock = pygame.time.Clock()
         last_frame = time.time()
