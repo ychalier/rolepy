@@ -12,9 +12,6 @@ class MoveCamera(AsyncTask):
         iterator = WalkAnimation.cycle()
         player = game.tile_manager.entities[game.world.player.texture]
         def function():
-            if game.is_moving:
-                return
-            game.is_moving = True
             game.movements[direction] = True
             player.direction = direction
             while game.movements[direction]:
@@ -42,5 +39,4 @@ class MoveCamera(AsyncTask):
                     time.sleep(duration / 25)
             game.camera.round()
             player.walk_animation = WalkAnimation.REST
-            game.is_moving = False
         AsyncTask.__init__(self, function)

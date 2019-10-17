@@ -14,6 +14,7 @@ from rolepy.graphics import TileManager
 from rolepy.graphics import WorldSurface
 from rolepy.graphics import Interface
 from rolepy.graphics import InterfaceBox
+from rolepy.misc import TaskManager
 
 
 class Game:
@@ -21,18 +22,15 @@ class Game:
     def __init__(self, settings):
         self.settings = settings
         self.screen = None
-        self.clock = None
         self.renderer = None
         self.tile_manager = TileManager()
         self.world = World()
         self.camera = Position(0, 0)
-        self.camera_is_moving = False
         self.world_surface = WorldSurface(self.tile_manager, self.world)
         self.interface = Interface(self.settings.resolution)
         self.fps_interface_box = InterfaceBox(self.interface, 77, 29)
         self.zone_interface_box = InterfaceBox(self.interface, 151, 29)
-        self.is_moving = False
-        self.is_detecting_zone = False
+        self.task_manager = TaskManager()
         self.movements = {
             Ordinal.EAST: False,
             Ordinal.NORTH: False,
@@ -64,7 +62,6 @@ class Game:
         pygame.display.set_caption("RolePy")
         pygame.display.set_icon(pygame.image.load("assets/logo.png"))
         pygame.key.set_repeat(self.settings.key_repeat_delay)
-        self.clock = pygame.time.Clock()
         last_frame = time.time()
         logging.debug("Entering main loop")
         player_tile = self.tile_manager.entities[self.world.player.texture]
@@ -79,13 +76,13 @@ class Game:
                         logging.info("Exiting from ESC key pressed")
                         sys.exit()
                     elif event.key == pygame.locals.K_UP:
-                        MoveCamera(self, Ordinal.NORTH).start()
+                        self.task_manager.start(MoveCamera(self, Ordinal.NORTH))
                     elif event.key == pygame.locals.K_DOWN:
-                        MoveCamera(self, Ordinal.SOUTH).start()
+                        self.task_manager.start(MoveCamera(self, Ordinal.SOUTH))
                     elif event.key == pygame.locals.K_LEFT:
-                        MoveCamera(self, Ordinal.WEST).start()
+                        self.task_manager.start(MoveCamera(self, Ordinal.WEST))
                     elif event.key == pygame.locals.K_RIGHT:
-                        MoveCamera(self, Ordinal.EAST).start()
+                        self.task_manager.start(MoveCamera(self, Ordinal.EAST))
                     elif event.key == pygame.locals.K_LSHIFT:
                         self.speed = 10
                 elif event.type == pygame.KEYUP:
@@ -106,8 +103,11 @@ class Game:
                 else:
                     fps.add(1 / (now - last_frame))
                 self.fps_interface_box.update("fps: {}".format(round(fps.mean)))
-                if not self.is_detecting_zone:
-                    DetectZone(self, *self.camera.pair()).start()
+                zone = self.world.get_zone(*self.camera.pair())
+                if zone is None:
+                    self.task_manager.start(DetectZone(self, *self.camera.pair()))
+                else:
+                    self.zone_interface_box.update(zone.name)
                 rendering = Render(self)
                 rendering.start()
                 rendering.join()

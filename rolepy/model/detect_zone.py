@@ -36,25 +36,18 @@ class DetectZone(AsyncTask):
     def __init__(self, game, x_float, y_float):
 
         def function():
-            game.is_detecting_zone = True
             x = round(x_float)
             y = round(y_float)
-            if game.world.generator.biome_map[y, x] == Biome.PLAIN:
-                zone = Zone(Biome.PLAIN)
-            elif Position(x, y) in game.world.zones_map:
-                zone = game.world.zones_map[Position(x, y)]
-            else:
-                logging.debug("Detecting zone at ({}, {})".format(x, y))
-                bg_task = DetectZoneBackground()
-                bg_task.input.put((game.world.generator.seed, x, y))
-                bg_task.start()
-                zone = bg_task.output.get()
-                bg_task.join()
-                bg_task.terminate()
-                logging.debug("Detected zone: {}".format(zone))
-                game.world.zones.append(zone)
-                for i, j in zone.inside:
-                    game.world.zones_map[Position(j, i)] = zone
+            logging.debug("Detecting zone at ({}, {})".format(x, y))
+            bg_task = DetectZoneBackground()
+            bg_task.input.put((game.world.generator.seed, x, y))
+            bg_task.start()
+            zone = bg_task.output.get()
+            bg_task.join()
+            bg_task.terminate()
+            logging.debug("Detected zone: {}".format(zone))
+            game.world.zones.append(zone)
+            for i, j in zone.inside:
+                game.world.zones_map[Position(j, i)] = zone
             game.zone_interface_box.update(zone.name)
-            game.is_detecting_zone = False
         AsyncTask.__init__(self, function)

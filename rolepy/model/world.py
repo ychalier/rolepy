@@ -25,3 +25,12 @@ class World:
         for x in range(-100, 101):
             for y in range(-100, 101):
                 self.generate(x, y)
+
+    def get_zone(self, x_float, y_float):
+        x = round(x_float)
+        y = round(y_float)
+        if self.generator.biome_map[y, x] == Biome.PLAIN:
+            return Zone(Biome.PLAIN)
+        elif Position(x, y) in self.zones_map:
+            return self.zones_map[Position(x, y)]
+        return None
