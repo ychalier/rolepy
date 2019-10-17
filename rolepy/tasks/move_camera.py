@@ -1,10 +1,9 @@
 import time
-from rolepy.misc import AsyncTask
+from rolepy.tasks import AsyncTask
 from rolepy.misc import Position
 from rolepy.globals import Ordinal
 from rolepy.globals import WalkAnimation
-from rolepy.globals import SPRITE_SIZE
-from rolepy.graphics import LoadWorld
+
 
 class MoveCamera(AsyncTask):
 
@@ -28,7 +27,6 @@ class MoveCamera(AsyncTask):
                 start = time.time()
                 last = start
                 progress = 0
-                LoadWorld(game, destination).start()
                 while progress < 1:
                     current = time.time()
                     progress = min(1, (current - start) / duration)

@@ -1,3 +1,6 @@
+import math
+
+
 class Position:
 
     def __init__(self, x, y):
@@ -27,6 +30,16 @@ class Position:
 
     def __rmul__(self, other):
         return Position(other * self.x, other * self.y)
+
+    def norm_inf(self):
+        return max(abs(self.x), abs(self.y))
+
+    def angle(self):
+        vect = complex(self.x, self.y)
+        return math.atan2(vect.imag, vect.real)
+
+    def inner_product(self, other):
+        return self.x * other.x + self.y * other.y
 
     def target(self):
         return Position(round(self.x), round(self.y))

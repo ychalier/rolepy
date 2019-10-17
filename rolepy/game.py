@@ -6,15 +6,15 @@ import sys
 from rolepy.misc import Position
 from rolepy.misc import Fifo
 from rolepy.model import World
-from rolepy.model import DetectZone
+from rolepy.tasks import DetectZone
+from rolepy.tasks import MoveCamera
+from rolepy.tasks import TaskManager
 from rolepy.globals import Ordinal
 from rolepy.graphics import Render
-from rolepy.graphics import MoveCamera
-from rolepy.graphics import TileManager
-from rolepy.graphics import WorldSurface
-from rolepy.graphics import Interface
-from rolepy.graphics import InterfaceBox
-from rolepy.misc import TaskManager
+from rolepy.graphics.assets import TileManager
+from rolepy.graphics.terrain import WorldSurfaceManager
+from rolepy.graphics.interface import Interface
+from rolepy.graphics.interface import InterfaceBox
 
 
 class Game:
@@ -26,7 +26,7 @@ class Game:
         self.tile_manager = TileManager()
         self.world = World()
         self.camera = Position(0, 0)
-        self.world_surface = WorldSurface(self.tile_manager, self.world)
+        self.world_surface_manager = WorldSurfaceManager(self.tile_manager, self.world, Position(0, 0))
         self.interface = Interface(self.settings.resolution)
         self.fps_interface_box = InterfaceBox(self.interface, 77, 29)
         self.zone_interface_box = InterfaceBox(self.interface, 151, 29)
@@ -50,7 +50,7 @@ class Game:
         self.interface.boxes[Position(8, self.settings.resolution[1] - 37)] = self.zone_interface_box
         logging.debug("Loading world")
         self.world.load()
-        self.world_surface.build()
+        self.world_surface_manager.load()
         logging.info("Done loading, took {elapsed} seconds".format(
             elapsed=time.time() - t_start))
 
@@ -97,6 +97,7 @@ class Game:
                     elif event.key == pygame.locals.K_LSHIFT:
                         self.speed = 5
             now = time.time()
+            self.world_surface_manager.update(self.camera, self.task_manager)
             if self.settings.max_fps is None or now - last_frame > 1 / self.settings.max_fps:
                 if now == last_frame:
                     fps.add(1e3)

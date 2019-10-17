@@ -1,6 +1,6 @@
 import os
-from rolepy.graphics import Tile
-from rolepy.graphics import Sprite
+from rolepy.graphics.assets import Tile
+from rolepy.graphics.assets import Sprite
 from rolepy.globals import Ordinal
 from rolepy.globals import WalkAnimation
 

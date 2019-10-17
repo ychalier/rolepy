@@ -1,6 +1,6 @@
 import logging
-from rolepy.misc import AsyncTask
-from rolepy.misc import BackgroundTask
+from rolepy.tasks import AsyncTask
+from rolepy.tasks import BackgroundTask
 from rolepy.misc import Position
 from rolepy.generate import WorldGenerator
 from rolepy.generate.biomes import Biome

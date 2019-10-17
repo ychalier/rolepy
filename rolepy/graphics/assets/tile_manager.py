@@ -1,9 +1,9 @@
 import logging
-from rolepy.graphics import Sprite
 from rolepy.globals import TextureTerrain
 from rolepy.globals import TextureEntities
-from rolepy.graphics import TerrainTile
-from rolepy.graphics import EntityTile
+from rolepy.graphics.assets import Sprite
+from rolepy.graphics.assets import TerrainTile
+from rolepy.graphics.assets import EntityTile
 
 
 class TileManager:

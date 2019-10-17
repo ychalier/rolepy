@@ -1,4 +1,4 @@
-from rolepy.graphics import Tile
+from rolepy.graphics.assets import Tile
 
 
 class TerrainTile(Tile):
