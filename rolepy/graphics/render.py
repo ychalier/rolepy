@@ -21,6 +21,6 @@ class Render(AsyncTask):
                 game.tile_manager.entities[game.world.player.texture].sprite(),
                 (width / 2 - SPRITE_SIZE / 2, height / 2 - SPRITE_SIZE / 2)
             )
-            game.interface.blit(game.screen)
+            game.interface_manager.blit(game.screen)
             pygame.display.flip()
         AsyncTask.__init__(self, function)

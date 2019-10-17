@@ -13,8 +13,7 @@ from rolepy.globals import Ordinal
 from rolepy.graphics import Render
 from rolepy.graphics.assets import TileManager
 from rolepy.graphics.terrain import WorldSurfaceManager
-from rolepy.graphics.interface import Interface
-from rolepy.graphics.interface import InterfaceBox
+from rolepy.graphics.interface import InterfaceManager
 
 
 class Game:
@@ -22,14 +21,11 @@ class Game:
     def __init__(self, settings):
         self.settings = settings
         self.screen = None
-        self.renderer = None
         self.tile_manager = TileManager()
         self.world = World()
         self.camera = Position(0, 0)
         self.world_surface_manager = WorldSurfaceManager(self.tile_manager, self.world, Position(0, 0))
-        self.interface = Interface(self.settings.resolution)
-        self.fps_interface_box = InterfaceBox(self.interface, 77, 29)
-        self.zone_interface_box = InterfaceBox(self.interface, 151, 29)
+        self.interface_manager = InterfaceManager(self.settings.resolution)
         self.task_manager = TaskManager()
         self.movements = {
             Ordinal.EAST: False,
@@ -44,10 +40,8 @@ class Game:
         t_start = time.time()
         logging.debug("Loading sprites")
         self.tile_manager.load()
-        logging.debug("Loading fonts")
-        self.interface.load()
-        self.interface.boxes[Position(8, 8)] = self.fps_interface_box
-        self.interface.boxes[Position(8, self.settings.resolution[1] - 37)] = self.zone_interface_box
+        logging.debug("Loading interfaces")
+        self.interface_manager.load()
         logging.debug("Loading world")
         self.world.load()
         self.world_surface_manager.load()
@@ -96,6 +90,8 @@ class Game:
                         self.movements[Ordinal.EAST] = False
                     elif event.key == pygame.locals.K_LSHIFT:
                         self.speed = 5
+                    elif event.key == pygame.locals.K_F1:
+                        self.interface_manager.increment_state()
             now = time.time()
             self.world_surface_manager.update(self.camera, self.task_manager)
             if self.settings.max_fps is None or now - last_frame > 1 / self.settings.max_fps:
@@ -103,12 +99,13 @@ class Game:
                     fps.add(1e3)
                 else:
                     fps.add(1 / (now - last_frame))
-                self.fps_interface_box.update("fps: {}".format(round(fps.mean)))
+                self.interface_manager[InterfaceManager.DEBUG_INTERFACE].fps.update("fps: {}".format(round(fps.mean)))
+                self.interface_manager[InterfaceManager.DEBUG_INTERFACE].pos.update("x: {}, y: {}".format(*self.camera.target().pair()))
                 zone = self.world.get_zone(*self.camera.pair())
                 if zone is None:
                     self.task_manager.start(DetectZone(self, *self.camera.pair()))
                 else:
-                    self.zone_interface_box.update(zone.name)
+                    self.interface_manager[InterfaceManager.DEBUG_INTERFACE].zone.update(zone.name)
                 rendering = Render(self)
                 rendering.start()
                 rendering.join()

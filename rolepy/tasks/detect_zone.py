@@ -5,6 +5,7 @@ from rolepy.misc import Position
 from rolepy.generate import WorldGenerator
 from rolepy.generate.biomes import Biome
 from rolepy.generate.biomes import Zone
+from rolepy.graphics.interface import InterfaceManager
 
 
 class DetectZoneBackground(BackgroundTask):
@@ -49,5 +50,5 @@ class DetectZone(AsyncTask):
             game.world.zones.append(zone)
             for i, j in zone.inside:
                 game.world.zones_map[Position(j, i)] = zone
-            game.zone_interface_box.update(zone.name)
+            game.interface_manager[InterfaceManager.DEBUG_INTERFACE].zone.update(zone.name)
         AsyncTask.__init__(self, function)
