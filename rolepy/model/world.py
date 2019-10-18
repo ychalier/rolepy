@@ -22,9 +22,7 @@ class World:
         self.terrain[Position(x, y)] = self.generator[y, x]
 
     def load(self):
-        for x in range(-200, 201):
-            for y in range(-200, 201):
-                self.generate(x, y)
+        pass
 
     def get_zone(self, x_float, y_float):
         x = round(x_float)
