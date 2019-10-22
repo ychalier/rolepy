@@ -1,3 +1,4 @@
+import time
 import pygame
 from rolepy.globals import SPRITE_SIZE
 from rolepy.misc import Position
@@ -23,7 +24,7 @@ class WorldSurface(pygame.Surface):
             WorldSurface.SIZE // 2 - round(center.y)
         )
 
-    def build(self):
+    def build(self, delay=None):
         """Blits the terrain tiles onto the surface."""
         target = self.center.target()
         range_x = range(target.x - WorldSurface.SIZE // 2, target.x + WorldSurface.SIZE // 2 + 1)
@@ -39,3 +40,5 @@ class WorldSurface(pygame.Surface):
                         j * SPRITE_SIZE,
                         i * SPRITE_SIZE,
                     ))
+            if delay is not None:
+                time.sleep(delay)

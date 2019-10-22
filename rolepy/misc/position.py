@@ -23,6 +23,9 @@ class Position:
     def __sub__(self, other):
         return Position(self.x - other.x, self.y - other.y)
 
+    def __repr__(self):
+        return "Pos(%f, %f)" % (self.x, self.y)
+
     def __str__(self):
         return "({x}, {y})".format(x=self.x, y=self.y)
 
