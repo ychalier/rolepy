@@ -1,10 +1,6 @@
-from rolepy.graphics.assets import Tile
-
-
-class TerrainTile(Tile):
+class TerrainTile:
 
     def __init__(self, sprite):
-        Tile.__init__(self)
         self.sprite_ = sprite
 
     def load(self):

@@ -14,7 +14,19 @@ from rolepy.graphics import Render
 from rolepy.graphics.assets import TileManager
 from rolepy.graphics.terrain import WorldSurfaceManager
 from rolepy.graphics.interface import InterfaceManager
+from rolepy.globals import TextureEntities
+from rolepy.globals import SPRITE_SIZE
+from rolepy.graphics.entities import EntityAiThread
+from rolepy.graphics.entities import NpcAi
+from rolepy.graphics.entities import EntityManager
+from rolepy.graphics.entities import Entity
 
+
+def smooth_translation(source, destination):
+    gap = destination - source
+    if gap.norm_inf() < .1 / SPRITE_SIZE:
+        return destination
+    return .01 * (99. * source + destination)
 
 class Game:
 
@@ -26,6 +38,7 @@ class Game:
         self.camera = Position(0, 0)
         self.world_surface_manager = WorldSurfaceManager(self.tile_manager, self.world, Position(0, 0))
         self.interface_manager = InterfaceManager(self.settings.resolution)
+        self.entity_manager = EntityManager(*map(lambda x: x // SPRITE_SIZE + 1, self.settings.resolution))
         self.task_manager = TaskManager()
         self.movements = {
             Ordinal.EAST: False,
@@ -33,6 +46,7 @@ class Game:
             Ordinal.WEST: False,
             Ordinal.SOUTH: False
         }
+        self.player_entity = None
         self.speed = 5
 
     def load(self):
@@ -45,6 +59,12 @@ class Game:
         logging.debug("Loading world")
         self.world.load()
         self.world_surface_manager.load()
+        logging.debug("Loading entities")
+        self.player_entity = Entity(self.entity_manager, 1, self.tile_manager.entities[TextureEntities.MAN], Position(0, 0), speed=5)
+        self.entity_manager.add(self.player_entity)
+        self.entity_manager.add(Entity(self.entity_manager, 2, self.tile_manager.entities[TextureEntities.WOMAN], Position(0, 1), ai=NpcAi(Position(0, 1))))
+        self.entity_manager.add(Entity(self.entity_manager, 3, self.tile_manager.entities[TextureEntities.WOMAN], Position(0, 2), ai=NpcAi(Position(10, 2))))
+        self.entity_manager.update_registry(self.camera)
         logging.info("Done loading, took {elapsed} seconds".format(
             elapsed=time.time() - t_start))
 
@@ -58,7 +78,6 @@ class Game:
         pygame.key.set_repeat(self.settings.key_repeat_delay)
         last_frame = time.time()
         logging.debug("Entering main loop")
-        player_tile = self.tile_manager.entities[self.world.player.texture]
         fps = Fifo(10)
         while True:
             for event in pygame.event.get():
@@ -70,13 +89,17 @@ class Game:
                         logging.info("Exiting from ESC key pressed")
                         sys.exit()
                     elif event.key == pygame.locals.K_UP:
-                        self.task_manager.start(MoveCamera(self, Ordinal.NORTH))
+                        # self.task_manager.start(MoveCamera(self, Ordinal.NORTH))
+                        self.task_manager.start(self.player_entity.move(Ordinal.NORTH, 1))
                     elif event.key == pygame.locals.K_DOWN:
-                        self.task_manager.start(MoveCamera(self, Ordinal.SOUTH))
+                        # self.task_manager.start(MoveCamera(self, Ordinal.SOUTH))
+                        self.task_manager.start(self.player_entity.move(Ordinal.SOUTH, 1))
                     elif event.key == pygame.locals.K_LEFT:
-                        self.task_manager.start(MoveCamera(self, Ordinal.WEST))
+                        # self.task_manager.start(MoveCamera(self, Ordinal.WEST))
+                        self.task_manager.start(self.player_entity.move(Ordinal.WEST, 1))
                     elif event.key == pygame.locals.K_RIGHT:
-                        self.task_manager.start(MoveCamera(self, Ordinal.EAST))
+                        # self.task_manager.start(MoveCamera(self, Ordinal.EAST))
+                        self.task_manager.start(self.player_entity.move(Ordinal.EAST, 1))
                     elif event.key == pygame.locals.K_LSHIFT:
                         self.speed = 10
                 elif event.type == pygame.KEYUP:
@@ -94,6 +117,9 @@ class Game:
                         self.interface_manager.increment_state()
             now = time.time()
             self.world_surface_manager.update(self.camera, self.task_manager)
+            self.task_manager.start(EntityAiThread(self.entity_manager), log=False)
+            self.entity_manager.center = self.camera.target()
+            self.camera = smooth_translation(self.camera, self.player_entity.position)
             if self.settings.max_fps is None or now - last_frame > 1 / self.settings.max_fps:
                 if now == last_frame:
                     fps.add(1e3)
