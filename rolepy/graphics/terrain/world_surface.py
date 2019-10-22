@@ -7,7 +7,7 @@ from rolepy.misc import Position
 class WorldSurface(pygame.Surface):
     """Represent one fixed-size piece of world surface."""
 
-    SIZE = 121
+    SIZE = 181
 
     def __init__(self, tile_manager, world, center):
         pygame.Surface.__init__(

@@ -1,4 +1,5 @@
 import logging
+import time
 import math
 from rolepy.globals import Ordinal
 from rolepy.misc import Position
@@ -73,6 +74,7 @@ class WorldSurfaceManager:
             for i in range(3):
                 self.surfaces[i].pop(0)
             self.center = Position(*new_center.pair())
+            time.sleep(.01)
             for i in range(3):
                 self.surfaces[i].append(self.get_world_surface(
                     new_center + Position(
@@ -84,6 +86,7 @@ class WorldSurfaceManager:
             new_center = self.surfaces[0][1].center
             self.surfaces.pop(2)
             self.center = Position(*new_center.pair())
+            time.sleep(.01)
             self.surfaces.insert(0, list())
             for j in range(3):
                 self.surfaces[0].append(self.get_world_surface(
@@ -97,6 +100,7 @@ class WorldSurfaceManager:
             for i in range(3):
                 self.surfaces[i].pop(2)
             self.center = Position(*new_center.pair())
+            time.sleep(.01)
             for i in range(3):
                 self.surfaces[i].insert(0, self.get_world_surface(
                     new_center + Position(
@@ -108,6 +112,7 @@ class WorldSurfaceManager:
             new_center = self.surfaces[2][1].center
             self.surfaces.pop(0)
             self.center = Position(*new_center.pair())
+            time.sleep(.01)
             self.surfaces.append(list())
             for j in range(3):
                 self.surfaces[2].append(self.get_world_surface(
