@@ -18,7 +18,6 @@ class WorldSurfaceManager:
         self.tile_manager = tile_manager
         self.world = world
         self.surfaces_storage = dict()
-        print(center)
         self.surfaces = [
             [
                 WorldSurface(
