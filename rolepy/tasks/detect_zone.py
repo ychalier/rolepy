@@ -1,4 +1,5 @@
 import logging
+import time
 from rolepy.tasks import AsyncTask
 from rolepy.tasks import BackgroundTask
 from rolepy.misc import Position
@@ -54,11 +55,16 @@ class DetectZone(AsyncTask):
             bg_task.start()
             zone = bg_task.output.get()
             bg_task.join()
-            bg_task.terminate()
             logging.debug("Detected zone: %s", zone)
-            game.world.zones.append(zone)
-            for i, j in zone.inside:
-                game.world.zones_map[Position(j, i)] = zone
             game.interface_manager[InterfaceManager.DEBUG_INTERFACE].zone.update(
                 zone.name)
+            game.world.zones.append(zone)
+            count = 0
+            for i, j in zone.inside:
+                game.world.zones_map[Position(j, i)] = zone
+                count += 1
+                if count % 500 == 0:
+                    time.sleep(.001)
+            bg_task.terminate()
+            logging.debug("Finished loading new zone")
         AsyncTask.__init__(self, function)
