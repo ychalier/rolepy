@@ -1,7 +1,5 @@
 import logging
-import pygame
 import math
-from rolepy.globals import SPRITE_SIZE
 from rolepy.globals import Ordinal
 from rolepy.misc import Position
 from rolepy.graphics.terrain import WorldSurface
@@ -9,6 +7,11 @@ from rolepy.tasks import SwitchWorldSurface
 
 
 class WorldSurfaceManager:
+    """Manages the surface containing world terrain, aiming to make it
+       seem infinite and without loading screens.
+       Works by maintaining a 3*3 grid of surroundings surfaces and switching
+       between them.
+    """
 
     def __init__(self, tile_manager, world, center):
         self.tile_manager = tile_manager
@@ -30,18 +33,21 @@ class WorldSurfaceManager:
         self.center = center
 
     def surface(self):
+        """Return the center surface."""
         return self.surfaces[1][1]
 
     def load(self, i=None, j=None):
+        """Initial build of the grid of surfaces."""
         if i is None or j is None:
-            for i in range(3):
-                for j in range(3):
-                    self.load(i, j)
+            for pos_i in range(3):
+                for pos_j in range(3):
+                    self.load(pos_i, pos_j)
             return
         self.surfaces[i][j].build()
 
     def switch(self, direction):
-        logging.debug("Going {}".format(direction))
+        """Switch from one surface to another."""
+        logging.debug("Going %s", direction)
         if direction == Ordinal.EAST:
             new_center = self.surfaces[1][2].center
             for i in range(3):
@@ -104,6 +110,7 @@ class WorldSurfaceManager:
                 self.surfaces[2][j].build()
 
     def update(self, position, task_manager):
+        """Check if a surface switch is necessary."""
         gap = position - self.center
         distance = gap.norm_inf()
         if distance > WorldSurface.SIZE // 4:

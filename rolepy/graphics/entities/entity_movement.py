@@ -1,17 +1,18 @@
 import time
 from rolepy.tasks import AsyncTask
-from rolepy.globals import WalkAnimation
+from rolepy.globals import WalkAnimation, walk_animation_cycle
 from rolepy.globals import Ordinal
 from rolepy.misc import Position
 
 
 class EntityMovement(AsyncTask):
+    """Thread dedicated to the movement of an entity."""
 
     def __init__(self, entity, direction, distance):
         entity.thinking = False
         duration = float(distance) / entity.speed
         source = Position(*entity.position.pair())
-        iterator = WalkAnimation.cycle()
+        iterator = walk_animation_cycle()
         if direction == Ordinal.NORTH:
             destination = source + Position(0, -distance)
         elif direction == Ordinal.SOUTH:
@@ -20,6 +21,7 @@ class EntityMovement(AsyncTask):
             destination = source + Position(-distance, 0)
         elif direction == Ordinal.EAST:
             destination = source + Position(distance, 0)
+
         def function():
             entity.direction = direction
             start = time.time()
@@ -28,7 +30,8 @@ class EntityMovement(AsyncTask):
             while progress < 1:
                 current = time.time()
                 progress = min(1, (current - start) / duration)
-                entity.position = (1 - progress) * source + progress * destination
+                entity.position = (1 - progress) * source + \
+                    progress * destination
                 if current - last > duration / 4 / distance:
                     entity.walk_animation = next(iterator)
                     last = current

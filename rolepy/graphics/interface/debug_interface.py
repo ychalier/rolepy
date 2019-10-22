@@ -4,6 +4,7 @@ from rolepy.misc import Position
 
 
 class DebugInterface(Interface):
+    """Default interface showing debugging informations."""
 
     def __init__(self, manager):
         Interface.__init__(self, manager)

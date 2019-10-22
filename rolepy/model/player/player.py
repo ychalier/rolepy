@@ -3,6 +3,7 @@ from rolepy.model.player import Skillset
 
 
 class Player:
+    """Logical model of the main character."""
 
     def __init__(self):
         self.health = 100

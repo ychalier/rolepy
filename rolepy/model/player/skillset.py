@@ -1,4 +1,5 @@
 class Skillset:
+    """Set of skills of a character."""
 
     def __init__(self):
         self.strength = 1

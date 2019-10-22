@@ -3,6 +3,7 @@ from rolepy.globals import SPRITE_SIZE
 
 
 class Sprite(pygame.Surface):
+    """Square surface showing a sprite loaded from a file."""
 
     def __init__(self, path):
         pygame.Surface.__init__(
@@ -10,5 +11,6 @@ class Sprite(pygame.Surface):
         self.path = path
 
     def load(self):
+        """Load a square sprite and blit it to internal surface."""
         if self.path is not None:
             self.blit(pygame.image.load(self.path), (0, 0))

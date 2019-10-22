@@ -2,6 +2,7 @@ import random as rd
 
 
 def custom_hash(seeds):
+    """Return a custom hash value given a set of integers."""
     root_seed = 0
     for seed in seeds:
         rd.seed(root_seed + seed)

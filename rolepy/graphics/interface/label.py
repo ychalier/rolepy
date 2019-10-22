@@ -2,22 +2,30 @@ import pygame
 
 
 class Label:
+    """Textual component for an interface."""
 
-    def __init__(self, font, width, height, align="center", background=(0, 0, 0, 100), color=(255, 255, 255)):
+    def __init__(self, font, width, height, **kwargs):
         self.font = font
-        self.align = align
-        self.color = color
         self.width = width
         self.height = height
-        self.background = background
-        self.surface = pygame.Surface((width, height), pygame.SRCALPHA | pygame.HWSURFACE, 32)
+        self.align = "center"
+        self.color = (255, 255, 255)
+        self.background = (0, 0, 0, 100)
+        for arg_name, arg_value in kwargs.items():
+            setattr(self, arg_name, arg_value)
+        self.surface = pygame.Surface(
+            (width, height),
+            flags=pygame.SRCALPHA | pygame.HWSURFACE,
+            depth=32
+        )
         self.text = ""
 
     def update(self, text):
+        """Update the text of the label."""
         text = text.strip()
         if text == self.text:
             return
-        elif text == "":
+        if text == "":
             self.surface.fill((0, 0, 0, 0))
             self.text = ""
             return

@@ -1,4 +1,5 @@
 class Item:
+    """General model for items."""
 
     def __init__(self, name, price):
         self.name = name

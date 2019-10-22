@@ -1,4 +1,5 @@
 class Inventory:
+    """Hold the inventory of a character."""
 
     BAG_SIZE = 10
 

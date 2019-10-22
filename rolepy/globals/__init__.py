@@ -5,6 +5,7 @@ SPRITE_SIZE = 16  # px
 
 @enum.unique
 class TextureTerrain(enum.Enum):
+    """Enumeration of all possible terrain textures."""
     EMPTY = 0
     GRASS_0 = 1
     GRASS_1 = 2
@@ -32,12 +33,14 @@ class TextureTerrain(enum.Enum):
 
 @enum.unique
 class TextureEntities(enum.Enum):
+    """Enumeration of all possible entity textures."""
     MAN = 0
     WOMAN = 1
 
 
 @enum.unique
 class Ordinal(enum.Enum):
+    """Enumeration of all 4 directions."""
     EAST = 0
     NORTH = 1
     WEST = 2
@@ -46,13 +49,16 @@ class Ordinal(enum.Enum):
 
 @enum.unique
 class WalkAnimation(enum.Enum):
+    """Enumeration of all possible walking animation keyframes."""
     LEFT = 0
     REST = 1
     RIGHT = 2
 
-    def cycle():
-        while True:
-            yield WalkAnimation.LEFT
-            yield WalkAnimation.REST
-            yield WalkAnimation.RIGHT
-            yield WalkAnimation.REST
+
+def walk_animation_cycle():
+    """Coherent cycle for the walking animation."""
+    while True:
+        yield WalkAnimation.LEFT
+        yield WalkAnimation.REST
+        yield WalkAnimation.RIGHT
+        yield WalkAnimation.REST

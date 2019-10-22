@@ -5,6 +5,7 @@ from rolepy.globals import Ordinal
 
 
 class NpcAi:
+    """Default NPC wandering AI."""
 
     def __init__(self, center):
         self.last_movement = 0
@@ -15,6 +16,7 @@ class NpcAi:
         self.center = center
 
     def iterate(self, entity):
+        """Discrete decision making procedure."""
         now = time.time()
         if now > self.next_movement:
             remoteness = entity.position - self.center
@@ -33,5 +35,7 @@ class NpcAi:
             distance = random.randint(1, 5)
             entity.move(direction, distance).start()
             self.last_movement = now
-            self.next_movement = random.random() * (self.max_time_between_movements - self.min_time_between_movements) + self.min_time_between_movements + self.last_movement
+            self.next_movement = random.random() \
+                * (self.max_time_between_movements - self.min_time_between_movements) \
+                + self.min_time_between_movements + self.last_movement
         entity.thinking = True

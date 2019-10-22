@@ -1,2 +1,2 @@
-from .forests import ForestNameGenerator
-from .mountains import MountainNameGenerator
+from .forests import get_forest_name
+from .mountains import get_mountain_name

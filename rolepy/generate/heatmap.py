@@ -5,29 +5,33 @@ from rolepy.globals import Ordinal
 
 
 def merge_dict(dict_a, dict_b):
-    merger = {key: value for key, value in dict_a.items()}
+    """Merge the content of two dictionnaries into one."""
+    merger = dict_a.copy()
     for key, value in dict_b.items():
         merger[key] = value
     return merger
 
 
 class Heatmap:
+    """A 2D infinite grid of [-1, 1] coherent random values."""
 
     def __init__(self, seed):
         self.seed = seed
         self.chunks = dict()
 
     def __getitem__(self, position):
-        x, y = position
-        h = 2 ** Chunk.SIZE + 1
-        chunk = self.generate_chunk(y // h, x // h)
-        return chunk[y % h][x % h]
+        pos_x, pos_y = position
+        size = 2 ** Chunk.SIZE + 1
+        chunk = self.generate_chunk(pos_y // size, pos_x // size)
+        return chunk[pos_y % size][pos_x % size]
 
     def set_chunk_seed(self, i, j):
+        """Set the random seed before the generation of a chunk."""
         chunk_seed = custom_hash([self.seed, i, j])
         rd.seed(chunk_seed)
 
     def generate_chunk(self, i, j):
+        """Return the chunk at coordinates (i, j), and generate it if needed."""
         if (i, j) in self.chunks:
             return self.chunks[i, j]
         base = dict()
