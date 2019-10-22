@@ -39,22 +39,12 @@ class EntityManager:
                 entity.think()
 
     def update_entity_position(self, entity):
-        """Update the membership of one entity to the registry."""
+        """Update the position of one entity."""
         old_position = self.entities[entity]
         self.map[old_position].discard(entity)
         if len(self.map[old_position]) == 0:
             del self.map[old_position]
         self.add(entity)
-        if self.center is not None:
-            if (self.center.x - self.width // 2
-                    <= entity.position.x
-                    < self.center.x + self.width // 2 + 1) \
-                and (self.center.y - self.height // 2
-                     <= entity.position.y
-                     < self.center.y + self.height // 2 + 1):
-                self.registry.add(entity)
-            else:
-                self.registry.discard(entity)
 
     def update_registry(self):
         """Exhaustive build of entity registry."""

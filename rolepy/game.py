@@ -44,7 +44,7 @@ class Game:
         )
         self.interface_manager = InterfaceManager(self.settings.resolution)
         self.entity_manager = EntityManager(*map(
-            lambda x: x // SPRITE_SIZE + 1,
+            lambda x: x // SPRITE_SIZE + 2,
             self.settings.resolution
         ))
         self.task_manager = TaskManager()
@@ -115,22 +115,22 @@ class Game:
                         sys.exit()
                     elif event.key == pygame.locals.K_UP:
                         self.task_manager.start(
-                            self.player_entity.move(Ordinal.NORTH, 1),
+                            self.player_entity.move(Ordinal.NORTH, 1, True),
                             log=False
                         )
                     elif event.key == pygame.locals.K_DOWN:
                         self.task_manager.start(
-                            self.player_entity.move(Ordinal.SOUTH, 1),
+                            self.player_entity.move(Ordinal.SOUTH, 1, True),
                             log=False
                         )
                     elif event.key == pygame.locals.K_LEFT:
                         self.task_manager.start(
-                            self.player_entity.move(Ordinal.WEST, 1),
+                            self.player_entity.move(Ordinal.WEST, 1, True),
                             log=False
                         )
                     elif event.key == pygame.locals.K_RIGHT:
                         self.task_manager.start(
-                            self.player_entity.move(Ordinal.EAST, 1),
+                            self.player_entity.move(Ordinal.EAST, 1, True),
                             log=False
                         )
                     elif event.key == pygame.locals.K_LSHIFT:

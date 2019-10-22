@@ -43,8 +43,8 @@ class Entity:
             transformer(self.position).pair()
         )
 
-    def move(self, direction, distance):
+    def move(self, direction, distance, update=False):
         """Start a thread that will move the entity of a given number of tiles
            in a given direction.
         """
-        return EntityMovement(self, direction, distance)
+        return EntityMovement(self, direction, distance, update)

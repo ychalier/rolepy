@@ -8,7 +8,7 @@ from rolepy.misc import Position
 class EntityMovement(AsyncTask):
     """Thread dedicated to the movement of an entity."""
 
-    def __init__(self, entity, direction, distance):
+    def __init__(self, entity, direction, distance, update=False):
         entity.thinking = False
         duration = float(distance) / entity.speed
         source = Position(*entity.position.pair())
@@ -39,4 +39,6 @@ class EntityMovement(AsyncTask):
             entity.walk_animation = WalkAnimation.REST
             entity.position.round()
             entity.manager.update_entity_position(entity)
+            if update:
+                entity.manager.update_registry()
         AsyncTask.__init__(self, function)
