@@ -23,21 +23,20 @@ class EntityMovement(AsyncTask):
             destination = source + Position(distance, 0)
 
         def function():
-            entity.direction = direction
+            entity.set_direction(direction)
             start = time.time()
             progress = 0
             last = 0
             while progress < 1:
                 current = time.time()
                 progress = min(1, (current - start) / duration)
-                entity.position = (1 - progress) * source + \
-                    progress * destination
+                entity.set_position((1 - progress) * source + progress * destination)
                 if current - last > duration / 4 / distance:
-                    entity.walk_animation = next(iterator)
+                    entity.set_walk_animation(next(iterator))
                     last = current
                 time.sleep(duration / 100)
-            entity.walk_animation = WalkAnimation.REST
-            entity.position.round()
+            entity.set_walk_animation(WalkAnimation.REST)
+            entity.set_position(entity.position.target())
             entity.manager.update_entity_position(entity)
             if update:
                 entity.manager.update_registry()

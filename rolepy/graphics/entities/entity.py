@@ -2,6 +2,7 @@ from rolepy.globals import WalkAnimation
 from rolepy.globals import Ordinal
 from rolepy.misc import Position
 from rolepy.graphics.entities import EntityMovement
+from rolepy.events import AttributeChangeEvent
 
 
 class Entity:
@@ -28,6 +29,42 @@ class Entity:
 
     def __repr__(self):
         return "<Entity {}>".format(self.identifier)
+
+    def set_position(self, position):
+        """Setter for the position attribute."""
+        self.position = position
+        self.manager.event_handler.trigger(
+            self,
+            AttributeChangeEvent("position"),
+            value=position
+        )
+
+    def set_speed(self, speed):
+        """Setter for the speed attribute."""
+        self.speed = speed
+        self.manager.event_handler.trigger(
+            self,
+            AttributeChangeEvent("speed"),
+            value=speed
+        )
+
+    def set_direction(self, direction):
+        """Setter for the direction attribute."""
+        self.direction = direction
+        self.manager.event_handler.trigger(
+            self,
+            AttributeChangeEvent("direction"),
+            value=direction
+        )
+
+    def set_walk_animation(self, walk_animation):
+        """Setter for the walk_animation attribute."""
+        self.walk_animation = walk_animation
+        self.manager.event_handler.trigger(
+            self,
+            AttributeChangeEvent("walk_animation"),
+            value=walk_animation
+        )
 
     def think(self):
         """Perform one step of entity own AI."""

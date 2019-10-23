@@ -9,8 +9,9 @@ def hash_entity_position(position):
 class EntityManager:
     """Store and handle all entities."""
 
-    def __init__(self, width, height):
+    def __init__(self, event_handler, width, height):
         super(EntityManager, self).__init__()
+        self.event_handler = event_handler
         self.registry = set()
         self.entities = dict()
         self.map = dict()

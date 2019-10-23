@@ -1,6 +1,5 @@
 import logging
 import time
-import sys
 import pygame
 import pygame.locals
 from rolepy.misc import Position
@@ -8,7 +7,6 @@ from rolepy.misc import Fifo
 from rolepy.model import World
 from rolepy.tasks import DetectZone
 from rolepy.tasks import TaskManager
-from rolepy.globals import Ordinal
 from rolepy.graphics import Render
 from rolepy.graphics.assets import TileManager
 from rolepy.graphics.terrain import WorldSurfaceManager
@@ -19,6 +17,7 @@ from rolepy.graphics.entities import EntityAiThread
 from rolepy.graphics.entities import NpcAi
 from rolepy.graphics.entities import EntityManager
 from rolepy.graphics.entities import Entity
+from rolepy.events import EventHandler
 
 
 def smooth_translation(source, destination):
@@ -27,6 +26,7 @@ def smooth_translation(source, destination):
     if gap.norm_inf() < .1 / SPRITE_SIZE:
         return destination
     return .01 * (99. * source + destination)
+
 
 class Game:
     """Main game controller, hosting main routine."""
@@ -43,12 +43,14 @@ class Game:
             Position(0, 0)
         )
         self.interface_manager = InterfaceManager(self.settings.resolution)
-        self.entity_manager = EntityManager(*map(
+        self.event_handler = EventHandler(self)
+        self.entity_manager = EntityManager(self.event_handler, *map(
             lambda x: x // SPRITE_SIZE + 2,
             self.settings.resolution
         ))
         self.task_manager = TaskManager()
         self.player_entity = None
+        self.running = True
 
     def load(self):
         """Loads components of the game into the RAM."""
@@ -87,6 +89,7 @@ class Game:
         self.entity_manager.update_registry()
         logging.info("Done loading, took %f seconds", time.time() - t_start)
 
+
     def start(self):
         """Once loaded, setup the window and start the main routine."""
         logging.debug("Creating window of size %d*%d", *self.settings.resolution)
@@ -99,47 +102,18 @@ class Game:
         pygame.key.set_repeat(self.settings.key_repeat_delay)
         self.main()
 
+    def quit(self):
+        """Quit the game."""
+        logging.info("Exiting from QUIT event")
+        self.running = False
+
     def main(self):
         """Main routine of the game."""
         logging.debug("Entering main loop")
         last_frame = time.time()
         fps = Fifo(10)
-        while True:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    logging.info("Exiting from QUIT event")
-                    sys.exit()
-                elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.locals.K_ESCAPE:
-                        logging.info("Exiting from ESC key pressed")
-                        sys.exit()
-                    elif event.key == pygame.locals.K_UP:
-                        self.task_manager.start(
-                            self.player_entity.move(Ordinal.NORTH, 1, True),
-                            log=False
-                        )
-                    elif event.key == pygame.locals.K_DOWN:
-                        self.task_manager.start(
-                            self.player_entity.move(Ordinal.SOUTH, 1, True),
-                            log=False
-                        )
-                    elif event.key == pygame.locals.K_LEFT:
-                        self.task_manager.start(
-                            self.player_entity.move(Ordinal.WEST, 1, True),
-                            log=False
-                        )
-                    elif event.key == pygame.locals.K_RIGHT:
-                        self.task_manager.start(
-                            self.player_entity.move(Ordinal.EAST, 1, True),
-                            log=False
-                        )
-                    elif event.key == pygame.locals.K_LSHIFT:
-                        self.player_entity.speed = 10
-                elif event.type == pygame.KEYUP:
-                    if event.key == pygame.locals.K_LSHIFT:
-                        self.player_entity.speed = 5
-                    elif event.key == pygame.locals.K_F1:
-                        self.interface_manager.increment_state()
+        while self.running:
+            self.event_handler.handle_input_events()
             now = time.time()
             self.world_surface_manager.update(self.camera, self.task_manager)
             self.task_manager.start(EntityAiThread(self.entity_manager), log=False)
