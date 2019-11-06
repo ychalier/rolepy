@@ -2,30 +2,20 @@ import logging
 import time
 import pygame
 import pygame.locals
-from rolepy.misc import Position
-from rolepy.misc import Fifo
+from rolepy.engine.core.structs import Fifo
+from rolepy.engine.core.tasks import TaskManager
+from rolepy.engine.resources import TileManager
+from rolepy.engine.graphics import Render
+from rolepy.engine.graphics import Camera
+from rolepy.engine.terrain import WorldSurfaceManager
+from rolepy.engine.interface import InterfaceManager
+from rolepy.engine.entities import EntityThread
+from rolepy.engine.entities import EntityManager
+from rolepy.engine.events import EventManager
+from rolepy.engine.inputs import InputManager
 from rolepy.model import World
-from rolepy.tasks import DetectZone
-from rolepy.tasks import TaskManager
-from rolepy.graphics import Render
-from rolepy.graphics.assets import TileManager
-from rolepy.graphics.terrain import WorldSurfaceManager
-from rolepy.graphics.interface import InterfaceManager
-from rolepy.globals import TextureEntities
-from rolepy.globals import SPRITE_SIZE
-from rolepy.graphics.entities import EntityAiThread
-from rolepy.graphics.entities import NpcAi
-from rolepy.graphics.entities import EntityManager
-from rolepy.graphics.entities import Entity
-from rolepy.events import EventHandler
-
-
-def smooth_translation(source, destination):
-    """Shifts a source position towards a destination with an ease-in effect."""
-    gap = destination - source
-    if gap.norm_inf() < .1 / SPRITE_SIZE:
-        return destination
-    return .01 * (99. * source + destination)
+from rolepy.model import Population
+from rolepy.generate import DetectZone
 
 
 class Game:
@@ -34,23 +24,17 @@ class Game:
     def __init__(self, settings):
         self.settings = settings
         self.screen = None
-        self.tile_manager = TileManager()
-        self.world = World()
-        self.camera = Position(0, 0)
-        self.world_surface_manager = WorldSurfaceManager(
-            self.tile_manager,
-            self.world,
-            Position(0, 0)
-        )
-        self.interface_manager = InterfaceManager(self.settings.resolution)
-        self.event_handler = EventHandler(self)
-        self.entity_manager = EntityManager(self.event_handler, *map(
-            lambda x: x // SPRITE_SIZE + 2,
-            self.settings.resolution
-        ))
-        self.task_manager = TaskManager()
-        self.player_entity = None
         self.running = True
+        self.population = None
+        self.world = World()
+        self.camera = Camera()
+        self.tile_manager = TileManager()
+        self.task_manager = TaskManager()
+        self.event_manager = EventManager()
+        self.input_manager = InputManager(self)
+        self.interface_manager = InterfaceManager(self.settings.resolution)
+        self.entity_manager = EntityManager(self.event_manager, self.settings.resolution)
+        self.world_surface_manager = WorldSurfaceManager(self.tile_manager, self.world, self.camera)
 
     def load(self):
         """Loads components of the game into the RAM."""
@@ -63,32 +47,15 @@ class Game:
         logging.debug("Loading world")
         self.world_surface_manager.load()
         logging.debug("Loading entities")
-        self.player_entity = Entity(
-            self.entity_manager,
-            1,
-            self.tile_manager.entities[TextureEntities.MAN],
-            position=Position(0, 0),
-            speed=5
-        )
-        self.entity_manager.add(self.player_entity)
-        self.entity_manager.add(Entity(
-            self.entity_manager,
-            2,
-            self.tile_manager.entities[TextureEntities.WOMAN],
-            position=Position(0, 1),
-            brain=NpcAi(Position(0, 1))
-        ))
-        self.entity_manager.add(Entity(
-            self.entity_manager,
-            3,
-            self.tile_manager.entities[TextureEntities.WOMAN],
-            position=Position(0, 2),
-            brain=NpcAi(Position(10, 2))
-        ))
         self.entity_manager.center = self.camera.target()
+        self.population = Population(self.entity_manager)
+        for entity in self.population.values():
+            self.entity_manager.add(entity)
+        self.entity_manager.set_player(self.population["__player__"])
         self.entity_manager.update_registry()
+        logging.debug("Setting up event listeners")
+        self.entity_manager.set_event_listeners(self.event_manager)
         logging.info("Done loading, took %f seconds", time.time() - t_start)
-
 
     def start(self):
         """Once loaded, setup the window and start the main routine."""
@@ -113,12 +80,12 @@ class Game:
         last_frame = time.time()
         fps = Fifo(10)
         while self.running:
-            self.event_handler.handle_input_events()
+            self.input_manager.update()
             now = time.time()
             self.world_surface_manager.update(self.camera, self.task_manager)
-            self.task_manager.start(EntityAiThread(self.entity_manager), log=False)
+            self.task_manager.start(EntityThread(self.entity_manager), log=False)
             self.entity_manager.center = self.camera.target()
-            self.camera = smooth_translation(self.camera, self.player_entity.position)
+            self.camera.smooth_translation(self.entity_manager.player.attributes.position)
             if self.settings.max_fps is None or now - last_frame > 1 / self.settings.max_fps:
                 fps.add(1 / max(now - last_frame, .001))
                 dbg_if = self.interface_manager[InterfaceManager.DEBUG_INTERFACE]

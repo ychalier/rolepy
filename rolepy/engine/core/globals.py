@@ -1,0 +1,1 @@
+SPRITE_SIZE = 16

@@ -1,7 +1,7 @@
 import random as rd
 from rolepy.generate import Chunk
 from rolepy.generate import custom_hash
-from rolepy.globals import Ordinal
+from rolepy.engine.core.enums import Ordinal
 
 
 def merge_dict(dict_a, dict_b):
