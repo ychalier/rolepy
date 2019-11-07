@@ -14,6 +14,8 @@ class Movement(AsyncTask):
         entity.attributes.set("state", EntityState.MOVING)
         duration = float(distance) / entity.attributes.speed
         source = Position(*entity.attributes.position.pair())
+        destination = front_position(source, direction, distance)
+
         def posture_cycle():
             while True:
                 yield Posture.LEFT
@@ -21,7 +23,7 @@ class Movement(AsyncTask):
                 yield Posture.RIGHT
                 yield Posture.REST
         postures = posture_cycle()
-        destination = front_position(source, direction, distance)
+
         def function():
             entity.attributes.set("direction", direction)
             start = time.time()
@@ -29,12 +31,18 @@ class Movement(AsyncTask):
             progress = 0
             last = 0
             while progress < early_stop:
-                if entity.attributes.interrupt_movement or len(entity.manager.get(front_position(entity.attributes.position, entity.attributes.direction))) > 0:
+                if entity.attributes.interrupt_movement \
+                    or len(entity.manager.get(front_position(
+                            entity.attributes.position,
+                            entity.attributes.direction))) > 0:
                     early_stop = float(math.ceil(progress * distance)) / distance
                     entity.attributes.set("interrupt_movement", False)
                 current = time.time()
                 progress = min(1, (current - start) / duration)
-                entity.attributes.set("position", (1 - progress) * source + progress * destination)
+                entity.attributes.set(
+                    "position",
+                    (1 - progress) * source + progress * destination
+                )
                 if current - last > duration / 4 / distance:
                     entity.attributes.set("posture", next(postures))
                     last = current

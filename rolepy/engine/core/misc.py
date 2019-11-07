@@ -1,9 +1,12 @@
+import math
 from rolepy.engine.core.enums import Ordinal
 from rolepy.engine.core.structs import Position
-import math
 
 
 def direction_gradient(ordinal):
+    """Return the vector representation of a direction, as a gradient of
+       position in this direction.
+    """
     if ordinal == Ordinal.NORTH:
         return Position(0, -1)
     if ordinal == Ordinal.SOUTH:
@@ -14,6 +17,7 @@ def direction_gradient(ordinal):
 
 
 def reverse_direction(ordinal):
+    """Return the opposite of a direction."""
     return {
         Ordinal.NORTH: Ordinal.SOUTH,
         Ordinal.SOUTH: Ordinal.NORTH,
@@ -23,14 +27,18 @@ def reverse_direction(ordinal):
 
 
 def front_position(start, direction, distance=1):
+    """Return the position that is at a given distance in a given direction
+       from a starting position.
+    """
     return start + distance * direction_gradient(direction)
 
 
 def angle_direction(angle):
+    """Return the ordinal a vector is pointing to, given its angle."""
     if math.pi / 4 >= angle > -math.pi / 4:
         return Ordinal.EAST
-    elif 3 * math.pi / 4 >= angle > math.pi / 4:
+    if 3 * math.pi / 4 >= angle > math.pi / 4:
         return Ordinal.SOUTH
-    elif -math.pi / 4 >= angle > -3 * math.pi / 4:
+    if -math.pi / 4 >= angle > -3 * math.pi / 4:
         return Ordinal.NORTH
     return Ordinal.WEST

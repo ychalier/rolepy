@@ -1,5 +1,4 @@
 class Intellect:
-
     """Automaton representation of an entity brain"""
 
     def __init__(self, entity, states, transitions, initial):
@@ -14,9 +13,12 @@ class Intellect:
 
     def update(self, trigger):
         """Perform the triggered transition if relevant."""
-        next = self.transitions.get(self.current_state, dict()).get(trigger, None)
-        if next is not None:
-            self.current_state = next
+        next_state = self.transitions \
+            .get(self.current_state, dict()) \
+            .get(trigger, None)
+        if next_state is not None:
+            self.current_state = next_state
             if self.get().force_interaction:
                 self.entity.interact()
-            return next
+            return next_state
+        return None

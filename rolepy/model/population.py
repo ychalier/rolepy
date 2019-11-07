@@ -5,6 +5,7 @@ from rolepy.engine.events.enums import Trigger
 
 
 class Population(dict):
+    """Create the instances of world entities."""
 
     def __init__(self, entity_manager):
         super(Population, self).__init__()

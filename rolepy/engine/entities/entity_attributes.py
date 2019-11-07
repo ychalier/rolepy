@@ -7,6 +7,7 @@ from rolepy.engine.events.implemented import AttributeChangeEvent
 
 
 class EntityAttributes:
+    """Represent all the attributes characterising the entity."""
 
     def __init__(self, entity):
         self.entity = entity
@@ -21,6 +22,9 @@ class EntityAttributes:
         self.interrupt_movement = False
 
     def set(self, attribute, value):
+        """Change the value of an attribute and fire an appropriate event."""
+        if attribute not in self.__dict__:
+            raise NameError("Incorrect attribute '%s'" % attribute)
         setattr(self, attribute, value)
         self.entity.manager.event_manager.provoke(
             self.entity,

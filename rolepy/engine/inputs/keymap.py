@@ -1,8 +1,9 @@
-from rolepy.engine.inputs import Command
 import pygame.locals
+from rolepy.engine.inputs import Command
 
 
 class Keymap(dict):
+    """Store the key bindings for the commands."""
 
     def __init__(self):
         super(Keymap, self).__init__()

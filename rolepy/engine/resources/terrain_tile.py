@@ -1,6 +1,5 @@
 class TerrainTile:
     """Represent a terrain tile."""
-    # TODO: Add tile informative features
 
     def __init__(self, sprite):
         self.sprite_ = sprite

@@ -5,6 +5,7 @@ from rolepy.engine.inputs import Keymap
 
 
 class InputManager:
+    """Handle the inputs of the player and execute the corresponding commands."""
 
     def __init__(self, game):
         self.game = game
@@ -29,7 +30,8 @@ class InputManager:
                         self.keymap[Command.MOVE_RIGHT]: Ordinal.EAST,
                     }[event.key]
                     self.game.task_manager.start(
-                        self.game.entity_manager.player.move(direction, 1, True),
+                        self.game.entity_manager.player.move(
+                            direction, 1, True),
                         log=False
                     )
                 elif event.key == self.keymap[Command.RUN]:

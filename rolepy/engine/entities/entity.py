@@ -27,9 +27,11 @@ class Entity:
         return "<Entity {}>".format(self.identifier)
 
     def take_action(self):
+        """Elementary step of autonomous decision making from the entity."""
         self.intellect.get().take_action(self)
 
     def interact(self, inbound_direction=None):
+        """Root level of interaction callback."""
         logging.info("Player is interacting with %s", self)
         if self.attributes.state == EntityState.MOVING:
             self.attributes.set("interrupt_movement", True)
@@ -37,7 +39,10 @@ class Entity:
                 time.sleep(.001)
         self.attributes.set("state", EntityState.INTERACTING)
         if inbound_direction is not None:
-            self.attributes.set("direction", reverse_direction(inbound_direction))
+            self.attributes.set(
+                "direction",
+                reverse_direction(inbound_direction)
+            )
         self.intellect.get().interact(self)
         self.attributes.set("next_movement", -1)
         self.attributes.set("state", EntityState.IDLE)
@@ -55,7 +60,6 @@ class Entity:
         surface.blit(
             tile_manager.entities[self.attributes.texture].sprite(
                 self.attributes.direction,
-                self.attributes.posture)
-            ,
+                self.attributes.posture),
             transformer(self.attributes.position).pair()
         )

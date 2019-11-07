@@ -3,6 +3,7 @@ from rolepy.engine.events.enums import EventType
 
 
 class TriggerEvent(Event):
+    """Event fired when a trigger is emitted, to change an entity intellect state."""
 
     def __init__(self, trigger):
         Event.__init__(self, EventType.TRIGGER_EVENT)

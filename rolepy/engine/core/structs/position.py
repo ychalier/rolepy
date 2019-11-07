@@ -41,7 +41,7 @@ class Position:
         """
         if p == 1:
             return abs(self.x) + abs(self.y)
-        elif p is not None:
+        if p is not None:
             return (self.x ** p + self.y ** p) ** (1 / float(p))
         return max(abs(self.x), abs(self.y))
 

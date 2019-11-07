@@ -42,21 +42,27 @@ class EntityManager:
         return self.map.get(key, set())
 
     def set_player(self, entity):
+        """Setter for the entity representing the actual player."""
         self.player = entity
 
     def set_event_listeners(self, event_manager):
+        """Emit event listeners so entities react to interaction and triggers."""
         def interaction_callback(arg):
             arg["listener"].target.interact(arg["keywords"]["direction"])
+
         def trigger_callback(arg):
             entity = arg["listener"].target
             trigger = arg["listener"].event.trigger
             next_state = entity.intellect.update(trigger)
             if next_state is not None:
-                logging.debug("Entity %s switched to state %d", entity, next_state)
-        for entity in self.entities.keys():
-            event_manager.add_event_listener(entity, InteractionEvent(), interaction_callback)
+                logging.debug("Entity %s switched to state %d",
+                              entity, next_state)
+        for entity in self.entities:
+            event_manager.add_event_listener(
+                entity, InteractionEvent(), interaction_callback)
             for trigger_type in Trigger:
-                event_manager.add_event_listener(entity, TriggerEvent(trigger_type), trigger_callback)
+                event_manager.add_event_listener(
+                    entity, TriggerEvent(trigger_type), trigger_callback)
 
     def update_entity_position(self, entity):
         """Update the position of one entity."""
@@ -79,8 +85,10 @@ class EntityManager:
             entity.blit(tile_manager, surface, transformer)
 
     def detect_interaction(self):
+        """Check if the player has an entity to interact with in front of him."""
         attrs = self.player.attributes
         entities = self.get(front_position(attrs.position, attrs.direction))
         if len(entities) > 0:
             entity = list(entities).pop(0)
-            self.event_manager.provoke(entity, InteractionEvent(), direction=attrs.direction)
+            self.event_manager.provoke(
+                entity, InteractionEvent(), direction=attrs.direction)
