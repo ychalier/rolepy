@@ -39,7 +39,7 @@ class InteractivePainter:
         current_label = self.font.render(self.current_text,
                                          True,
                                          self.color)
-        current_height = current_label.size()[1]
+        current_height = current_label.get_size()[1]
 
         if np.sum(self.heights) + current_height > self.height:
             self.labels.pop(0)

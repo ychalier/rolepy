@@ -13,13 +13,14 @@ class DialogueBox:
         self.screen = screen
         
 
-    def update(self, text, verbose=True):
+    def update(self, text, j, verbose=True):
         """Update the display of the dialogue box"""
         self.surface.fill((255, 255, 255))
         (width, height) = self.screen.get_size()
         position = (0, height - self.height)
 
-        self.interactivePainter.display_text(text)
+        if j % 100 == 0:
+            self.interactivePainter.display_text(text)
         if verbose:
             print('height : ', self.height)
             print('width : ', self.width)
@@ -39,9 +40,12 @@ if __name__ == '__main__':
     dialogue_box = DialogueBox(width=width,
                                height=150,
                                screen=screen)
+    j = 0
+    delay = 100
     while running:
         screen.fill((0, 0, 0))
-        dialogue_box.update(text)
+        dialogue_box.update(text, j)
+        j += 1
         event_list = pygame.event.get()
         
         for event in event_list:
