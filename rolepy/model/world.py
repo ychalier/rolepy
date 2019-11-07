@@ -1,7 +1,7 @@
 from rolepy.generate import WorldGenerator
 from rolepy.generate.biomes import Biome
 from rolepy.generate.biomes import Zone
-from rolepy.misc import Position
+from rolepy.engine.core.structs import Position
 from rolepy.model.player import Player
 
 

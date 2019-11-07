@@ -1,5 +1,5 @@
 import random as rd
-from rolepy.globals import Ordinal
+from rolepy.engine.core.enums import Ordinal
 
 
 class Chunk(list):

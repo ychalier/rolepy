@@ -3,7 +3,7 @@ import logging
 from rolepy.generate.biomes import Biome
 from rolepy.generate.biomes import BiomeMap
 from rolepy.generate import Heatmap
-from rolepy.globals import TextureTerrain
+from rolepy.engine.terrain import TerrainTexture
 
 
 class WorldGenerator:
@@ -35,34 +35,34 @@ class WorldGenerator:
         biome = self.biome_map[position]
         if biome == Biome.DESERT:
             layers.append(self.choose_version(position, [
-                TextureTerrain.SAND_0,
-                TextureTerrain.SAND_1,
-                TextureTerrain.SAND_2,
-                TextureTerrain.SAND_3,
-                TextureTerrain.SAND_4,
-                TextureTerrain.SAND_5
+                TerrainTexture.SAND_0,
+                TerrainTexture.SAND_1,
+                TerrainTexture.SAND_2,
+                TerrainTexture.SAND_3,
+                TerrainTexture.SAND_4,
+                TerrainTexture.SAND_5
             ]))
         else:
             layers.append(self.choose_version(position, [
-                TextureTerrain.GRASS_0,
-                TextureTerrain.GRASS_1,
-                TextureTerrain.GRASS_2,
-                TextureTerrain.GRASS_3,
-                TextureTerrain.GRASS_4,
-                TextureTerrain.GRASS_5,
-                TextureTerrain.GRASS_6
+                TerrainTexture.GRASS_0,
+                TerrainTexture.GRASS_1,
+                TerrainTexture.GRASS_2,
+                TerrainTexture.GRASS_3,
+                TerrainTexture.GRASS_4,
+                TerrainTexture.GRASS_5,
+                TerrainTexture.GRASS_6
             ]))
         if biome == Biome.FOREST:
             choice = self.choose_version(position, [
                 None,
-                TextureTerrain.TREE_LARGE,
-                TextureTerrain.TREE_SMALL
+                TerrainTexture.TREE_LARGE,
+                TerrainTexture.TREE_SMALL
             ])
             if choice is not None:
                 layers.append(choice)
         if biome == Biome.MOUNTAIN:
             choice = self.choose_version(
-                position, [None, TextureTerrain.GRASS_MOUNTAIN])
+                position, [None, TerrainTexture.GRASS_MOUNTAIN])
             if choice is not None:
                 layers = [choice]
         return layers
