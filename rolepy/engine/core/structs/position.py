@@ -35,6 +35,10 @@ class Position:
     def __rmul__(self, other):
         return Position(other * self.x, other * self.y)
 
+    def copy(self):
+        """Return a clean copy of the current position."""
+        return Position(*self.pair())
+
     def norm(self, p=None):
         """Return the p-norm of the vector. If p is None, then it returns the
            infinite norm.

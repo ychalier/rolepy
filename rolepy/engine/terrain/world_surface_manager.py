@@ -1,5 +1,4 @@
 import logging
-import time
 from rolepy.engine.core.enums import Ordinal
 from rolepy.engine.core.structs import Position
 from rolepy.engine.core.misc import angle_direction
@@ -54,13 +53,29 @@ class WorldSurfaceManager:
             if (self.center - surface_center).norm() > WorldSurface.SIZE * 10:
                 del self.surfaces_storage[surface_center]
 
-    def get_world_surface(self, center):
+    def get_world_surface(self, center, build_delay=.001):
         """Return the world surface at a given position, builds it if necessary."""
         if center in self.surfaces_storage:
             return self.surfaces_storage[center]
         logging.debug("Building surface at (%d, %d)", *center.pair())
         world_surface = WorldSurface(self.tile_manager, self.world, center)
-        world_surface.build(delay=.001)
+        built = False
+        for x, y in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+            neighbor_center = center + Position(
+                x * (WorldSurface.SIZE // 2),
+                y * (WorldSurface.SIZE // 2)
+            )
+            if neighbor_center in self.surfaces_storage:
+                neighbor_surface = self.surfaces_storage[neighbor_center]
+                world_surface.build_from(
+                    neighbor_surface,
+                    offset=neighbor_center - center,
+                    delay=build_delay
+                )
+                built = True
+                break
+        if not built:
+            world_surface.build(delay=build_delay)
         self.surfaces_storage[center] = world_surface
         self.check_surfaces_storage()
         return world_surface
@@ -73,7 +88,6 @@ class WorldSurfaceManager:
             for i in range(3):
                 self.surfaces[i].pop(0)
             self.center = Position(*new_center.pair())
-            time.sleep(.01)
             for i in range(3):
                 self.surfaces[i].append(self.get_world_surface(
                     new_center + Position(
@@ -85,7 +99,6 @@ class WorldSurfaceManager:
             new_center = self.surfaces[0][1].center
             self.surfaces.pop(2)
             self.center = Position(*new_center.pair())
-            time.sleep(.01)
             self.surfaces.insert(0, list())
             for j in range(3):
                 self.surfaces[0].append(self.get_world_surface(
@@ -99,7 +112,6 @@ class WorldSurfaceManager:
             for i in range(3):
                 self.surfaces[i].pop(2)
             self.center = Position(*new_center.pair())
-            time.sleep(.01)
             for i in range(3):
                 self.surfaces[i].insert(0, self.get_world_surface(
                     new_center + Position(
@@ -111,7 +123,6 @@ class WorldSurfaceManager:
             new_center = self.surfaces[2][1].center
             self.surfaces.pop(0)
             self.center = Position(*new_center.pair())
-            time.sleep(.01)
             self.surfaces.append(list())
             for j in range(3):
                 self.surfaces[2].append(self.get_world_surface(

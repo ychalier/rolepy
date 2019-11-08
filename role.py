@@ -16,5 +16,6 @@ if __name__ == "__main__":
     settings = Settings()
     settings.load("settings.txt")
     game = Game(settings)
-    game.load()
     game.start()
+    game.load()
+    game.main()

@@ -34,7 +34,11 @@ class Game:
         self.input_manager = InputManager(self)
         self.interface_manager = InterfaceManager(self.settings.resolution)
         self.entity_manager = EntityManager(self.event_manager, self.settings.resolution)
-        self.world_surface_manager = WorldSurfaceManager(self.tile_manager, self.world, self.camera)
+        self.world_surface_manager = WorldSurfaceManager(
+            self.tile_manager,
+            self.world,
+            self.camera.copy()
+        )
 
     def load(self):
         """Loads components of the game into the RAM."""
@@ -67,7 +71,6 @@ class Game:
         pygame.display.set_caption("RolePy")
         pygame.display.set_icon(pygame.image.load("assets/logo.png"))
         pygame.key.set_repeat(self.settings.key_repeat_delay)
-        self.main()
 
     def quit(self):
         """Quit the game."""
