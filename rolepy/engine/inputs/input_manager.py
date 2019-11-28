@@ -43,7 +43,8 @@ class InputManager:
                     self.game.interface_manager.increment_state()
                 elif event.key == self.keymap[Command.INTERACT]:
                     if self.game.interface_manager.dialog_manager.is_displayed:
-                        self.game.interface_manager.dialog_manager.validate()
+                        if not self.game.interface_manager.dialog_manager.text_box.in_animation:
+                            self.game.interface_manager.dialog_manager.validate()
                     else:
                         self.game.entity_manager.detect_interaction()
                 elif self.game.interface_manager.dialog_manager.is_displayed and self.game.interface_manager.dialog_manager.show_choices and event.key in [

@@ -22,6 +22,7 @@ class TextBox(DialogBox):
         self.characters = dict()
         self.line_height = 0
         self.char_width = 0
+        self.in_animation = False
         self.build_characters()
         self.create_surfaces()
 
@@ -39,6 +40,7 @@ class TextBox(DialogBox):
                 self.characters[char] = surface
 
     def async_build_foreground(self):
+        self.in_animation = True
         self.foreground.fill((0, 0, 0, 0))
         margin = self.settings["border_size"] + self.settings["padding"]
         cursor = Position(margin, margin)
@@ -74,6 +76,7 @@ class TextBox(DialogBox):
                  self.settings["height"] - margin - 5),
             ])
         self.manager.check_choices_display()
+        self.in_animation = False
 
     def build_foreground(self):
         BuildForegroundTask(self).start()
