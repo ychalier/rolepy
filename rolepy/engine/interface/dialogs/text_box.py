@@ -67,13 +67,16 @@ class TextBox(DialogBox):
                     time.sleep(self.settings["delay"])
             self.index += 1
         if not self.has_finished():
+            length = 8
+            h_length = length * .5 * (3 ** .5)
+            org = Position(
+                self.settings["width"] - margin,
+                self.settings["height"] - margin
+            )
             pygame.draw.polygon(self.foreground, self.settings["text_color"], [
-                (self.settings["width"] - margin - 20,
-                 self.settings["height"] - margin - 15),
-                (self.settings["width"] - margin - 10,
-                 self.settings["height"] - margin - 10),
-                (self.settings["width"] - margin - 20,
-                 self.settings["height"] - margin - 5),
+                (org - Position(h_length, length)).pair(),
+                (org - Position(0, .5 * length)).pair(),
+                (org - Position(h_length, 0)).pair(),
             ])
         self.manager.check_choices_display()
         self.in_animation = False
