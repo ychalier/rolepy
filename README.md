@@ -1,17 +1,23 @@
 # RolePy
 
-A 2D scrolling RPG game, with procedural universe including lore and terrain.
+RolePy is a role play game (RPG) based on the procedural generation of the
+logical and physical world, which the player may interract with to achieve
+personal goals or life principals.
 
-## 1. Setup
+[Documentation](https://rolepy.readthedocs.io/en/latest/) - [Wiki](https://github.com/ychalier/rolepy/wiki) - [YouTube](//www.youtube.com/channel/UCiNHU2xHojEsiInOtNtYrkg)
 
-### 1.1. Dependencies
+## Getting Started
 
-The game is implemented using Python 3 (v3.5.2. to be precise).
+Checkout [documentation](https://rolepy.readthedocs.io/en/latest/usage/index.html) for more details.
 
-Current implementation uses the [pygame](https://www.pygame.org/news) module
-for Python (find here the [documentation](https://www.pygame.org/docs)). Version is reported in `requirements.txt`.
+### Prerequisites
 
-### 1.2. Quick start
+The game is implemented using Python 3 (v3.5.2. to be precise). Current
+implementation uses the [pygame](https://www.pygame.org/news) module
+for Python (find here the [documentation](https://www.pygame.org/docs)).
+Version is reported in `requirements.txt`.
+
+### Installing
 
 Create a configuration file, `settings.txt`, with the following format:
 
@@ -35,8 +41,23 @@ Then start the main script with:
 python role.py
 ```
 
-## 2. Links
+## Built With
 
- - [Roadmap](//yohan.chalier.fr/notes/public/rolepy)
- - [Documentation on the game engine](//yohan.chalier.fr/notes/public/rolepy-game-engine)
- - [YouTube](//www.youtube.com/channel/UCiNHU2xHojEsiInOtNtYrkg)
+ - [PyGame](https://www.pygame.org/news) - Python graphic module
+ - [Aseprite](//www.aseprite.com) - Pixel art and sprites creation software
+
+## Contributing
+
+Contributions are welcomed. You might want to check the [roadmap](https://github.com/ychalier/rolepy/wiki/Roadmap) to have an idea of what to do, and the [documentation](https://rolepy.readthedocs.io/en/latest/) to have and idea of how to do it. Push your branch and create a pull request detailling your changes. Please make sure to maintain documentation up to date.
+
+## Authors
+
+Project is maintained by [Yohan Chalier](https://github.com/ychalier/). See the list of [contributors](https://github.com/ychalier/rolepy/graphs/contributors) who participated.
+
+## License
+
+This project is licensed under the GPL-3.0 License - see the [LICENSE.txt](LICENSE.txt) file for details.
+
+## Acknowledgments
+
+The gamme core mechanics are inspired by the [RPG Maker](https://www.rpgmakerweb.com/) series. Current sprites come from [Sharm's Tiny 16](https://opengameart.org/content/tiny-16-basic), but are only used for development purposes.
