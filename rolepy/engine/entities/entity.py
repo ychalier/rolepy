@@ -30,7 +30,7 @@ class Entity:
         """Elementary step of autonomous decision making from the entity."""
         self.intellect.get().take_action(self)
 
-    def interact(self, inbound_direction=None):
+    def open_interaction(self, inbound_direction=None):
         """Root level of interaction callback."""
         logging.info("Player is interacting with %s", self)
         if self.attributes.state == EntityState.MOVING:
@@ -43,8 +43,10 @@ class Entity:
                 "direction",
                 reverse_direction(inbound_direction)
             )
-        self.intellect.get().interact(self)
-        self.attributes.set("next_movement", -1)
+        self.intellect.get().open_interaction(self)
+
+    def close_interaction(self):
+        self.intellect.get().close_interaction(self)
         self.attributes.set("state", EntityState.IDLE)
 
     def move(self, direction, distance, update=False):

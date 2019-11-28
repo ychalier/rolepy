@@ -7,3 +7,4 @@ class EventType(enum.Enum):
     ATTRIBUTE_CHANGE = 0
     INTERACTION_EVENT = 1
     TRIGGER_EVENT = 2
+    DIALOG_CLOSE = 3

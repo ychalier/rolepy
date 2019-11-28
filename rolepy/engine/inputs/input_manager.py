@@ -18,7 +18,7 @@ class InputManager:
                     or (event.type == pygame.KEYDOWN and event.key == self.keymap[Command.QUIT]):
                 self.game.quit()
             elif event.type == pygame.KEYDOWN:
-                if event.key in [
+                if not self.game.interface_manager.dialog_manager.is_displayed and event.key in [
                         self.keymap[Command.MOVE_UP],
                         self.keymap[Command.MOVE_DOWN],
                         self.keymap[Command.MOVE_LEFT],
@@ -42,4 +42,15 @@ class InputManager:
                 elif event.key == self.keymap[Command.HUD]:
                     self.game.interface_manager.increment_state()
                 elif event.key == self.keymap[Command.INTERACT]:
-                    self.game.entity_manager.detect_interaction()
+                    if self.game.interface_manager.dialog_manager.is_displayed:
+                        self.game.interface_manager.dialog_manager.validate()
+                    else:
+                        self.game.entity_manager.detect_interaction()
+                elif self.game.interface_manager.dialog_manager.is_displayed and self.game.interface_manager.dialog_manager.show_choices and event.key in [
+                        self.keymap[Command.MOVE_UP],
+                        self.keymap[Command.MOVE_DOWN]]:
+                    if event.key == self.keymap[Command.MOVE_UP]:
+                        self.game.interface_manager.dialog_manager.choice_box.select_up()
+                    elif event.key == self.keymap[Command.MOVE_DOWN]:
+                        self.game.interface_manager.dialog_manager.choice_box.select_down()
+                    self.game.interface_manager.dialog_manager.choice_box.build_foreground()

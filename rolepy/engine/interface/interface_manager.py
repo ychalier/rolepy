@@ -1,5 +1,6 @@
-import pygame
 from rolepy.engine.interface import DebugInterface
+from rolepy.engine.interface.dialogs import DialogManager
+from rolepy.engine.resources import FontManager
 
 
 class InterfaceManager:
@@ -8,23 +9,26 @@ class InterfaceManager:
     EMPTY = 0
     DEBUG_INTERFACE = 1
 
-    def __init__(self, resolution):
+    def __init__(self, game):
         self.state = InterfaceManager.DEBUG_INTERFACE
-        self.resolution = resolution
-        self.fonts = dict()
+        self.game = game
+        self.resolution = game.settings.resolution
+        self.fonts = FontManager()
         self.interfaces = {InterfaceManager.EMPTY: None}
+        self.dialog_manager = DialogManager(self)
 
     def __getitem__(self, key):
         return self.interfaces[key]
 
     def load(self):
         """Load fonts and build interfaces."""
-        self.fonts["consolas"] = pygame.font.SysFont("consolas", 12)
+        self.fonts.load()
         self.interfaces[InterfaceManager.DEBUG_INTERFACE] = \
             DebugInterface(self)
 
-    def blit(self, screen):
+    def blit(self, screen, transformer):
         """Blit current interface to the screen."""
+        self.dialog_manager.blit(screen, transformer)
         interface = self.interfaces.get(self.state, None)
         if interface is not None:
             interface.blit(screen)

@@ -16,3 +16,6 @@ class EventListener:
         }
         thread = threading.Thread(target=self.callback, args=(arguments,))
         thread.start()
+
+    def __repr__(self):
+        return "EventListener<Target: %s; Event: %s>" % (self.target, self.event)

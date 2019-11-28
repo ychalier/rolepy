@@ -21,6 +21,6 @@ class Render(AsyncTask):
                 world_surface, transformer(-world_surface.offset).pair())
             game.entity_manager.blit(
                 game.tile_manager, game.screen, transformer)
-            game.interface_manager.blit(game.screen)
+            game.interface_manager.blit(game.screen, transformer)
             pygame.display.flip()
         AsyncTask.__init__(self, function)

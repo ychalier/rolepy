@@ -1,4 +1,5 @@
 import math
+import pygame
 from rolepy.engine.core.enums import Ordinal
 from rolepy.engine.core.structs import Position
 
@@ -42,3 +43,49 @@ def angle_direction(angle):
     if -math.pi / 4 >= angle > -3 * math.pi / 4:
         return Ordinal.NORTH
     return Ordinal.WEST
+
+
+def draw_rounded_rectangle(surface, margin, width, height, radius, color):
+    pygame.draw.polygon(surface, color, [
+        (margin + 0, margin + radius),
+        (margin + radius, margin + radius),
+        (margin + radius, margin + 0),
+        (margin + width - radius - 1, margin + 0),
+        (margin + width - radius - 1, margin + radius),
+        (margin + width - 1, margin + radius),
+        (margin + width - 1, margin + height - radius - 1),
+        (margin + width - radius - 1, margin + height - radius - 1),
+        (margin + width - radius - 1, margin + height - 1),
+        (margin + radius, margin + height - 1),
+        (margin + radius, margin + height - radius - 1),
+        (margin + 0, margin + height - radius - 1),
+    ])
+    pygame.draw.circle(
+        surface,
+        color,
+        (margin + radius, margin + radius), radius
+    )
+    pygame.draw.circle(
+        surface,
+        color,
+        (margin + width - radius, margin + radius), radius
+    )
+    pygame.draw.circle(
+        surface,
+        color,
+        (margin + width - radius, margin + height - radius), radius
+    )
+    pygame.draw.circle(
+        surface,
+        color,
+        (margin + radius, margin + height - radius), radius
+    )
+
+
+def inverse_color(color):
+    if len(color) == 3:
+        r, g, b = color
+        a = 255
+    else:
+        r, g, b, a = color
+    return (255 - r, 255 - g, 255 - b, a)
