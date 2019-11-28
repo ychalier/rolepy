@@ -55,6 +55,14 @@ class DialogManager:
             del self.choice_box
             self.choice_box = None
 
+    def cancel(self):
+        self.is_displayed = False
+        self.show_choices = False
+        del self.text_box
+        self.text_box = None
+        del self.choice_box
+        self.choice_box = None
+
     def check_choices_display(self):
         if self.text_box is not None\
                 and self.text_box.has_finished()\

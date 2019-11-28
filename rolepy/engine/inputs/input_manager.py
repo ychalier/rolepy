@@ -55,3 +55,6 @@ class InputManager:
                     elif event.key == self.keymap[Command.MOVE_DOWN]:
                         self.game.interface_manager.dialog_manager.choice_box.select_down()
                     self.game.interface_manager.dialog_manager.choice_box.build_foreground()
+                elif event.key == self.keymap[Command.CANCEL]:
+                    if self.game.interface_manager.dialog_manager.is_displayed:
+                        self.game.interface_manager.dialog_manager.cancel()

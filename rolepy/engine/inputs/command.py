@@ -12,3 +12,4 @@ class Command(enum.Enum):
     RUN = 5
     HUD = 6
     QUIT = 7
+    CANCEL = 8

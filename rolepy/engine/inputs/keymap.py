@@ -15,3 +15,4 @@ class Keymap(dict):
         self[Command.HUD] = pygame.locals.K_F1
         self[Command.QUIT] = pygame.locals.K_ESCAPE
         self[Command.INTERACT] = pygame.locals.K_e
+        self[Command.CANCEL] = pygame.locals.K_a
