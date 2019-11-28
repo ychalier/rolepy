@@ -4,6 +4,7 @@ from rolepy.engine.core.structs import Position
 from rolepy.engine.core.misc import front_position
 from rolepy.engine.events.implemented import TriggerEvent
 from rolepy.engine.events.implemented import InteractionEvent
+from rolepy.engine.events.implemented import DialogCloseEvent
 from rolepy.engine.events.enums import Trigger
 
 
@@ -15,9 +16,11 @@ def index_entity_position(position):
 class EntityManager:
     """Store and handle all entities."""
 
-    def __init__(self, event_manager, resolution):
+    def __init__(self, game):
         super(EntityManager, self).__init__()
-        self.event_manager = event_manager
+        self.game = game
+        self.event_manager = game.event_manager
+        resolution = game.settings.resolution
         self.registry = set()
         self.entities = dict()
         self.map = dict()
@@ -48,7 +51,7 @@ class EntityManager:
     def set_event_listeners(self, event_manager):
         """Emit event listeners so entities react to interaction and triggers."""
         def interaction_callback(arg):
-            arg["listener"].target.interact(arg["keywords"]["direction"])
+            arg["listener"].target.open_interaction(arg["keywords"]["direction"])
 
         def trigger_callback(arg):
             entity = arg["listener"].target
@@ -57,9 +60,15 @@ class EntityManager:
             if next_state is not None:
                 logging.debug("Entity %s switched to state %d",
                               entity, next_state)
+
+        def dialog_close_callback(arg):
+            arg["listener"].target.close_interaction()
+
         for entity in self.entities:
             event_manager.add_event_listener(
                 entity, InteractionEvent(), interaction_callback)
+            event_manager.add_event_listener(
+                entity, DialogCloseEvent(), dialog_close_callback)
             for trigger_type in Trigger:
                 event_manager.add_event_listener(
                     entity, TriggerEvent(trigger_type), trigger_callback)
@@ -83,6 +92,14 @@ class EntityManager:
         """Blit entities within the registry to the screen."""
         for entity in sorted(self.registry, key=lambda e: e.attributes.position.y):
             entity.blit(tile_manager, surface, transformer)
+
+    def detect_collision(self, position):
+        """Check if a registry entity occupies a given position."""
+        for entity in self.registry:
+            remoteness = (entity.attributes.position - position).norm()
+            if remoteness < 1:
+                return True
+        return False
 
     def detect_interaction(self):
         """Check if the player has an entity to interact with in front of him."""

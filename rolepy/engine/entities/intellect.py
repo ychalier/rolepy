@@ -19,6 +19,6 @@ class Intellect:
         if next_state is not None:
             self.current_state = next_state
             if self.get().force_interaction:
-                self.entity.interact()
+                self.entity.open_interaction()
             return next_state
         return None

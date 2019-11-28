@@ -32,8 +32,8 @@ class Game:
         self.task_manager = TaskManager()
         self.event_manager = EventManager()
         self.input_manager = InputManager(self)
-        self.interface_manager = InterfaceManager(self.settings.resolution)
-        self.entity_manager = EntityManager(self.event_manager, self.settings.resolution)
+        self.interface_manager = InterfaceManager(self)
+        self.entity_manager = EntityManager(self)
         self.world_surface_manager = WorldSurfaceManager(
             self.tile_manager,
             self.world,
