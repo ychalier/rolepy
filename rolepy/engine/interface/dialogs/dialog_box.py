@@ -1,10 +1,10 @@
 import pygame
 from rolepy.engine.core.misc import draw_rounded_rectangle
-from rolepy.engine.core.globals import SPRITE_SIZE
 from rolepy.engine.core.structs import Position
 
 
 class DialogBox:
+    """Basic class to display a dialog box."""
 
     def __init__(self, manager, **kwargs):
         self.manager = manager
@@ -28,6 +28,7 @@ class DialogBox:
         self.foreground = None
 
     def create_surfaces(self):
+        """Create PyGame surfaces and blit the background."""
         self.background = pygame.Surface(
             (self.settings["width"], self.settings["height"]),
             flags=pygame.SRCALPHA | pygame.HWSURFACE,
@@ -41,6 +42,7 @@ class DialogBox:
         self.build_background()
 
     def build_background(self):
+        """Blit rounded rectangles to the background surface."""
         self.background.fill((0, 0, 0, 0))
         draw_rounded_rectangle(
             self.background,
@@ -59,8 +61,18 @@ class DialogBox:
             self.settings["background_color"],
         )
 
-    def position(self, anchor):
-        return anchor - Position(
-            (self.settings["width"] // 2) - (SPRITE_SIZE // 2),
-            self.settings["height"] + self.settings["margin_bottom"]
-        )
+    def position(self, anchor, location):
+        """Return the position of the top left corner of the box relative to
+           a given anchor.
+        """
+        if location == "middle-above":
+            return anchor - Position(
+                self.settings["width"] // 2,
+                self.settings["height"] + self.settings["margin_bottom"]
+            )
+        if location == "right-above":
+            return anchor - Position(
+                self.settings["width"],
+                self.settings["height"] + self.settings["margin_bottom"]
+            )
+        return anchor

@@ -6,6 +6,7 @@ from rolepy.engine.events.implemented import TriggerEvent
 
 
 class DialogManager:
+    """Handle the currently displayed dialog box."""
 
     def __init__(self, interface_manager):
         self.interface_manager = interface_manager
@@ -19,26 +20,32 @@ class DialogManager:
         self.position = Position(0, 0)
 
     def open_dialog(self, entity, position, content, answers):
+        """Initiate the display of a dialog box."""
         self.entity = entity
         self.text_box = TextBox(self, content)
-        self.choice_box = ChoiceBox(self, answers)
+        self.choice_box = ChoiceBox(self, answers, margin_bottom=1)
         self.answers = answers
         self.position = position
         self.is_displayed = True
         self.validate()
 
     def blit(self, screen, transformer):
+        """Blit the current dialog boxes to the screen."""
         if not self.is_displayed:
             return
-        tpos = self.text_box.position(transformer(self.position))
+        tpos = self.text_box.position(transformer(self.position + Position(.5, 0)), "middle-above")
         screen.blit(self.text_box.background, tpos.pair())
         screen.blit(self.text_box.foreground, tpos.pair())
         if self.show_choices:
-            cpos = self.choice_box.position(transformer(self.position), self.text_box)
+            cpos = self.choice_box.position(
+                tpos + Position(self.text_box.settings["width"], 0),
+                "right-above"
+            )
             screen.blit(self.choice_box.background, cpos.pair())
             screen.blit(self.choice_box.foreground, cpos.pair())
 
     def validate(self):
+        """Handle validation event from user input."""
         if not self.text_box.has_finished():
             self.text_box.build_foreground()
         else:
@@ -56,6 +63,7 @@ class DialogManager:
             self.choice_box = None
 
     def cancel(self):
+        """Handle cancellation event from user input."""
         self.is_displayed = False
         self.show_choices = False
         del self.text_box
@@ -64,6 +72,7 @@ class DialogManager:
         self.choice_box = None
 
     def check_choices_display(self):
+        """Check if choice box should be displayed."""
         if self.text_box is not None\
                 and self.text_box.has_finished()\
                 and self.choice_box is not None\

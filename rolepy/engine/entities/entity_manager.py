@@ -94,6 +94,7 @@ class EntityManager:
             entity.blit(tile_manager, surface, transformer)
 
     def detect_collision(self, position):
+        """Check if a registry entity occupies a given position."""
         for entity in self.registry:
             remoteness = (entity.attributes.position - position).norm()
             if remoteness < 1:

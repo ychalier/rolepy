@@ -46,6 +46,7 @@ def angle_direction(angle):
 
 
 def draw_rounded_rectangle(surface, margin, width, height, radius, color):
+    """Draw a rounded rectangle on a surface."""
     pygame.draw.polygon(surface, color, [
         (margin + 0, margin + radius),
         (margin + radius, margin + radius),
@@ -83,6 +84,7 @@ def draw_rounded_rectangle(surface, margin, width, height, radius, color):
 
 
 def inverse_color(color):
+    """Return the complementary color."""
     if len(color) == 3:
         r, g, b = color
         a = 255

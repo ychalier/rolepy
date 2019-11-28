@@ -47,9 +47,10 @@ class InputManager:
                             self.game.interface_manager.dialog_manager.validate()
                     else:
                         self.game.entity_manager.detect_interaction()
-                elif self.game.interface_manager.dialog_manager.is_displayed and self.game.interface_manager.dialog_manager.show_choices and event.key in [
-                        self.keymap[Command.MOVE_UP],
-                        self.keymap[Command.MOVE_DOWN]]:
+                elif self.game.interface_manager.dialog_manager.is_displayed\
+                    and self.game.interface_manager.dialog_manager.show_choices and event.key in [
+                            self.keymap[Command.MOVE_UP],
+                            self.keymap[Command.MOVE_DOWN]]:
                     if event.key == self.keymap[Command.MOVE_UP]:
                         self.game.interface_manager.dialog_manager.choice_box.select_up()
                     elif event.key == self.keymap[Command.MOVE_DOWN]:

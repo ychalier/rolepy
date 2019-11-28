@@ -46,6 +46,7 @@ class Entity:
         self.intellect.get().open_interaction(self)
 
     def close_interaction(self):
+        """Reset the entity once the interaction has ended."""
         self.intellect.get().close_interaction(self)
         self.attributes.set("state", EntityState.IDLE)
 

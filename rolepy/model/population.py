@@ -87,6 +87,14 @@ class Population(dict):
         john = Entity(entity_manager, 4)
         john.attributes.position = Position(4, -2)
         john.intellect.states[0] = Behavior(
-            text_line="Ils défendent les Droits de l'Homme, mais quand monsieur Sarkozy a été rencontrer le roi, là-bas, le roi d'Arabie Saoudite au Maroc, il lui a dit : \"Dites monsieur, les Droits de l'Homme ? Vous allez arrêter de le frapper à mort, ce type qui a écrit un blog qui ne vous plaisait pas ?\". Et quand monsieur Hollande a privatisé un bout de la plage pour la donner au roi d'Arabie Saoudite, pour la donner au roi d'Arabie Saoudite, il lui a dit: \"Dis donc, faudra pas y aller en burkini hein ?\". Non, bien sur que non."
+            text_line=("Ils défendent les Droits de l'Homme, mais quand monsieur "
+                       "Sarkozy a été rencontrer le roi, là-bas, le roi d'Arabie Saoudite "
+                       "au Maroc, il lui a dit : \"Dites monsieur, les Droits de l'Homme ? "
+                       "Vous allez arrêter de le frapper à mort, ce type qui a écrit un blog "
+                       "qui ne vous plaisait pas ?\". Et quand monsieur Hollande a privatisé "
+                       "un bout de la plage pour la donner au roi d'Arabie Saoudite, pour la "
+                       "donner au roi d'Arabie Saoudite, il lui a dit: \"Dis donc, faudra pas "
+                       "y aller en burkini hein ?\". Non, bien sur que non."
+                       )
         )
         self["John"] = john

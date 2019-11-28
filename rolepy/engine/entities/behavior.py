@@ -63,37 +63,9 @@ class Behavior:
             self.text_line,
             self.proposed_answers
         )
-        # print(self.text_line)
-        # if len(self.proposed_answers) > 0:
-        #     for i, proposed_answer in enumerate(self.proposed_answers):
-        #         print("\t%d. %s" % (i, proposed_answer["text"]))
-        #     choice = None
-        #     try:
-        #         choice = int(input("\t> "))
-        #     except ValueError:
-        #         pass
-        #     if choice in range(len(self.proposed_answers)):
-        #         selection = self.proposed_answers[choice]
-        #         entity.manager.event_manager.provoke(
-        #             entity,
-        #             TriggerEvent(selection["trigger"]),
-        #         )
-        # if self.reset:
-        #     entity.manager.event_manager.provoke(
-        #         entity,
-        #         TriggerEvent(Trigger.RESET),
-        #     )
 
     def close_interaction(self, entity):
-        # choice = entity.manager.game.interface_manager.get_dialog_answer(
-        #     entity.attributes.position
-        # )
-        # if choice is not None and choice in range(len(self.proposed_answers)):
-        #     selection = self.proposed_answers[choice]
-        #     entity.manager.event_manager.provoke(
-        #         entity,
-        #         TriggerEvent(selection["trigger"]),
-        #     )
+        """Reset the behavior after the end of the interaction."""
         entity.attributes.set("next_movement", -1)
         entity.attributes.set("last_movement", time.time())
         if self.reset:

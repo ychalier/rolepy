@@ -2,6 +2,7 @@ import pygame
 
 
 class FontManager(dict):
+    """Class to load and server font resources in the game."""
 
     def load(self):
         self["consolas12"] = pygame.font.SysFont("consolas", 12)
