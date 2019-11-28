@@ -31,10 +31,11 @@ class Movement(AsyncTask):
             progress = 0
             last = 0
             while progress < early_stop:
-                if entity.attributes.interrupt_movement \
-                    or len(entity.manager.get(front_position(
-                            entity.attributes.position,
-                            entity.attributes.direction))) > 0:
+                collision = entity.manager.detect_collision(front_position(
+                    entity.attributes.position,
+                    entity.attributes.direction
+                ))
+                if entity.attributes.interrupt_movement or collision:
                     early_stop = float(math.ceil(progress * distance)) / distance
                     entity.attributes.set("interrupt_movement", False)
                 current = time.time()

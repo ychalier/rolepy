@@ -93,6 +93,13 @@ class EntityManager:
         for entity in sorted(self.registry, key=lambda e: e.attributes.position.y):
             entity.blit(tile_manager, surface, transformer)
 
+    def detect_collision(self, position):
+        for entity in self.registry:
+            remoteness = (entity.attributes.position - position).norm()
+            if remoteness < 1:
+                return True
+        return False
+
     def detect_interaction(self):
         """Check if the player has an entity to interact with in front of him."""
         attrs = self.player.attributes
