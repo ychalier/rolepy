@@ -21,6 +21,7 @@ class LoadingScreen(threading.Thread):
         width, height = self.screen.get_size()
         self.width = width
         self.height = height
+        self.blitting = False
         self.background_pattern = pygame.Surface(
             (2 * SPRITE_SIZE, 2 * SPRITE_SIZE),
             flags=pygame.SRCALPHA | pygame.HWSURFACE,
@@ -119,6 +120,9 @@ class LoadingScreen(threading.Thread):
 
     def blit(self):
         """Blits background and foreground elements onto the screen."""
+        if self.blitting:
+            return
+        self.blitting = True
         self.screen.blit(self.background, (0, 0))
         if self.title is not None:
             self.screen.blit(self.title, (
@@ -152,6 +156,7 @@ class LoadingScreen(threading.Thread):
         )
         self.screen.blit(time_surface, (10, 90))
         pygame.display.flip()
+        self.blitting = False
 
     def done_step(self):
         """Indicate the loading screen that the current step is done."""
@@ -178,5 +183,5 @@ class LoadingScreen(threading.Thread):
         """Main thread loop."""
         self.t_start = time.time()
         while self.progress < self.steps:
-            time.sleep(.01)
+            time.sleep(.05)
             self.blit()
