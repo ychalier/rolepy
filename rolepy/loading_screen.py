@@ -22,7 +22,7 @@ class LoadingScreen(threading.Thread):
         self.width = width
         self.height = height
         self.background_pattern = pygame.Surface(
-            (SPRITE_SIZE, SPRITE_SIZE),
+            (2 * SPRITE_SIZE, 2 * SPRITE_SIZE),
             flags=pygame.SRCALPHA | pygame.HWSURFACE,
             depth=32
         )
@@ -34,9 +34,9 @@ class LoadingScreen(threading.Thread):
         self.font_large = pygame.font.SysFont("ubuntumono", 20)
         self.font_small = pygame.font.SysFont("ubuntumono", 16)
         self.settings = {
-            "background_base_color": (51, 105, 30),
-            "stripes_color": (0, 61, 0),
-            "color_shift_radius": 2,
+            "background_base_color": (68, 139, 64),
+            "stripes_color": (29, 100, 64),
+            "color_shift_radius": 10,
             "text_color": (255, 255, 255),
             "bar_width": .75,
             "bar_height": 20,
@@ -51,8 +51,8 @@ class LoadingScreen(threading.Thread):
         """Create the background surface of the loading screen, with some
            generated pattern and man-made graphical elements.
         """
-        for i in range(SPRITE_SIZE):
-            for j in range(SPRITE_SIZE):
+        for i in range(2 * SPRITE_SIZE):
+            for j in range(2 * SPRITE_SIZE):
                 color = list()
                 for k in range(3):
                     color.append(min(
@@ -67,24 +67,20 @@ class LoadingScreen(threading.Thread):
                         )
                     ))
                 pygame.draw.line(self.background_pattern, color, (i, j), (i, j))
-        for k in range(random.randint(1, 2)):
-            slope = random.choice([1, -1])
-            cursor = [0, 0]
-            def mod(cursor):
-                return [
-                    int(cursor[0]) % SPRITE_SIZE,
-                    int(cursor[1]) % SPRITE_SIZE,
-                ]
-            for _ in range(int(SPRITE_SIZE) + 1):
-                pygame.draw.line(
-                    self.background_pattern,
-                    self.settings["stripes_color"],
-                    mod(cursor), mod(cursor)
-                )
-                cursor[0] += 1
-                cursor[1] += slope
-        for i in range(0, self.width + SPRITE_SIZE, SPRITE_SIZE):
-            for j in range(0, self.height + SPRITE_SIZE, SPRITE_SIZE):
+        pygame.draw.line(
+            self.background_pattern,
+            self.settings["stripes_color"],
+            (0, 0),
+            (2 * SPRITE_SIZE - 1, 2 * SPRITE_SIZE - 1)
+        )
+        pygame.draw.line(
+            self.background_pattern,
+            self.settings["stripes_color"],
+            (0, 2 * SPRITE_SIZE - 1),
+            (2 * SPRITE_SIZE - 1, 0)
+        )
+        for i in range(0, self.width + 2 * SPRITE_SIZE, 2 * SPRITE_SIZE):
+            for j in range(0, self.height + 2 * SPRITE_SIZE, 2 * SPRITE_SIZE):
                 self.background.blit(self.background_pattern, (i, j))
         rect = pygame.Rect(
             int(.5 * self.width * (1 - self.settings["bar_width"])),
