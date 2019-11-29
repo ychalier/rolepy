@@ -30,6 +30,23 @@ class EntityManager:
         self.center = None
         self.player = None
 
+    def load(self, camera, population, event_manager, loading_screen):
+        """Load entities from a population and setup event listeners."""
+        loading_screen.next_step("Loading entities", len(population) + 2)
+        self.center = camera.target()
+        for entity in population.values():
+            loading_screen.next_sub_step("Loading %s" % entity)
+            self.add(entity)
+            loading_screen.done_sub_step()
+        self.set_player(population["__player__"])
+        loading_screen.next_sub_step("Building registry")
+        self.update_registry()
+        loading_screen.done_sub_step()
+        loading_screen.next_sub_step("Setting up event listeners")
+        self.set_event_listeners(event_manager)
+        loading_screen.done_sub_step()
+        loading_screen.done_step()
+
     def add(self, entity):
         """Add an entity to the RAM."""
         hashed_position = index_entity_position(entity.attributes.position)

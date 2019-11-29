@@ -13,7 +13,7 @@ class TileManager:
         self.terrain = dict()
         self.entities = dict()
 
-    def load(self):
+    def load(self, loading_screen):
         """Load all sprites."""
         self.terrain[TerrainTexture.EMPTY] = TerrainTile(Sprite(None))
         self.terrain[TerrainTexture.GRASS_0] = \
@@ -64,9 +64,15 @@ class TileManager:
             EntityTile("assets/entities/man")
         self.entities[EntityTexture.WOMAN] = \
             EntityTile("assets/entities/woman")
+        loading_screen.next_step("Loading sprites", len(self.terrain) + len(self.entities))
         for enum, tile in self.terrain.items():
+            loading_screen.next_sub_step(enum.name)
             logging.debug("Loading terrain tile '%s'", enum.name)
             tile.load()
+            loading_screen.done_sub_step()
         for enum, tile in self.entities.items():
+            loading_screen.next_sub_step(enum.name)
             logging.debug("Loading entity tile '%s'", enum.name)
             tile.load()
+            loading_screen.done_sub_step()
+        loading_screen.done_step()
