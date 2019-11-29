@@ -1,6 +1,6 @@
 __title__ = 'RolePy'
 __package_name__ = 'rolepy'
-__version__ = '0.1.dev1'
+__version__ = '0.1.dev2'
 __description__ = 'A 2D scrolling RPG game, with procedural universe including lore and terrain.'
 __author__ = 'Yohan Chalier'
 __email__ = 'yohan@chalier.fr'

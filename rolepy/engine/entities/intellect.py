@@ -22,3 +22,23 @@ class Intellect:
                 self.entity.open_interaction()
             return next_state
         return None
+
+    def to_dict(self):
+        state_list = list()
+        for key, state in self.states.items():
+            d = state.to_dict()
+            d["key"] = key
+            state_list.append(d)
+        transition_list = list()
+        for start in self.transitions:
+            for trigger in self.transitions[start]:
+                transition_list.append({
+                    "start": start,
+                    "end": self.transitions[start][trigger],
+                    "trigger": trigger.value
+                })
+        return {
+            "current_state": self.current_state,
+            "states": state_list,
+            "transitions": transition_list
+        }

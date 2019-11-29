@@ -27,6 +27,21 @@ class Behavior:
         for arg_name, arg_value in kwargs.items():
             setattr(self, arg_name, arg_value)
 
+    def to_dict(self):
+        return {
+            "text_line": self.text_line,
+            "proposed_answers": [{
+                "text": answer["text"],
+                "trigger": answer["trigger"].value
+            } for answer in self.proposed_answers],
+            "force_interaction": self.force_interaction,
+            "movement_style": self.movement_style.value,
+            "max_time_between_movements": self.max_time_between_movements,
+            "min_time_between_movements": self.min_time_between_movements,
+            "anchor": self.anchor.to_dict(),
+            "reset": self.reset
+        }
+
     def take_action(self, entity):
         """Elementary step of autonomous decision making from the entity."""
         if self.movement_style == MovementStyle.RANDOM:

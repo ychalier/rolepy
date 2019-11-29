@@ -30,6 +30,13 @@ class EntityManager:
         self.center = None
         self.player = None
 
+    def to_dict(self):
+        return {
+            "center": self.center.to_dict(),
+            "player": self.player.identifier,
+            "entities": [e.to_dict() for e in self.entities]
+        }
+
     def load(self, camera, population, event_manager, loading_screen):
         """Load entities from a population and setup event listeners."""
         loading_screen.next_step("Loading entities", len(population) + 2)

@@ -26,6 +26,13 @@ class Entity:
     def __repr__(self):
         return "<Entity {}>".format(self.identifier)
 
+    def to_dict(self):
+        return {
+            "id": self.identifier,
+            "attributes": self.attributes.to_dict(),
+            "intellect": self.intellect.to_dict()
+        }
+
     def take_action(self):
         """Elementary step of autonomous decision making from the entity."""
         self.intellect.get().take_action(self)

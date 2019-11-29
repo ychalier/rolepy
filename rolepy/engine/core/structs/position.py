@@ -74,3 +74,9 @@ class Position:
         """Remove the floating part of the position."""
         self.x = round(self.x)
         self.y = round(self.y)
+
+    def to_dict(self):
+        return {
+            "x": self.x,
+            "y": self.y
+        }

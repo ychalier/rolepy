@@ -28,3 +28,16 @@ class World:
         if Position(x, y) in self.zones_map:
             return self.zones_map[Position(x, y)]
         return None
+
+    def to_dict(self):
+        return [
+            {
+                "x": position.x,
+                "y": position.y,
+                "l": [
+                    layer.value for layer in layers
+                ],
+                "z": self.zones_map.get(position, None)
+            }
+            for position, layers in self.terrain.items()
+        ]

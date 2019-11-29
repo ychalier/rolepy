@@ -1,4 +1,5 @@
 import logging
+import json
 import time
 import pygame
 import pygame.locals
@@ -41,6 +42,12 @@ class Game:
             self.camera.copy()
         )
 
+    def to_dict(self):
+        return {
+            "world": self.world.to_dict(),
+            "entities": self.entity_manager.to_dict()
+        }
+
     def load(self):
         """Loads components of the game into the RAM."""
         logging.info("Loading game")
@@ -58,6 +65,8 @@ class Game:
         self.entity_manager.load(self.camera, self.population, self.event_manager, loading_screen)
         loading_screen.join()
         logging.info("Done loading, took %f seconds", time.time() - t_start)
+        with open("save.json", 'w') as outfile:
+            json.dump(self.to_dict(), outfile)
 
     def start(self):
         """Once loaded, setup the window and start the main routine."""
