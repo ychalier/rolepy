@@ -37,15 +37,20 @@ class WorldSurfaceManager:
         """Return the center surface."""
         return self.surfaces[1][1]
 
-    def load(self, i=None, j=None):
-        """Initial build of the grid of surfaces."""
-        if i is None or j is None:
-            for pos_i in range(3):
-                for pos_j in range(3):
-                    self.load(pos_i, pos_j)
-            return
+    def load_unit(self, i, j):
+        """Build of world surface of the grid."""
         self.surfaces[i][j].build()
         self.surfaces_storage[self.surfaces[i][j].center] = self.surfaces[i][j]
+
+    def load(self, loading_screen):
+        """Initial build of the grid of surfaces."""
+        loading_screen.next_step("Loading world", 9)
+        for pos_i in range(3):
+            for pos_j in range(3):
+                loading_screen.next_sub_step("Loading WorldSurface #(%d, %d)" % (pos_i, pos_j))
+                self.load_unit(pos_i, pos_j)
+                loading_screen.done_sub_step()
+        loading_screen.done_step()
 
     def check_surfaces_storage(self):
         """Delete useless surfaces to make rooms for new ones."""

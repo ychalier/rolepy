@@ -16,6 +16,7 @@ from rolepy.engine.inputs import InputManager
 from rolepy.model import World
 from rolepy.model import Population
 from rolepy.generate import DetectZone
+from rolepy import LoadingScreen
 
 
 class Game:
@@ -44,21 +45,18 @@ class Game:
         """Loads components of the game into the RAM."""
         logging.info("Loading game")
         t_start = time.time()
+        loading_screen = LoadingScreen(self.screen, 3)
+        loading_screen.start()
         logging.debug("Loading sprites")
-        self.tile_manager.load()
+        self.tile_manager.load(loading_screen)
         logging.debug("Loading interfaces")
         self.interface_manager.load()
         logging.debug("Loading world")
-        self.world_surface_manager.load()
+        self.world_surface_manager.load(loading_screen)
         logging.debug("Loading entities")
-        self.entity_manager.center = self.camera.target()
         self.population = Population(self.entity_manager)
-        for entity in self.population.values():
-            self.entity_manager.add(entity)
-        self.entity_manager.set_player(self.population["__player__"])
-        self.entity_manager.update_registry()
-        logging.debug("Setting up event listeners")
-        self.entity_manager.set_event_listeners(self.event_manager)
+        self.entity_manager.load(self.camera, self.population, self.event_manager, loading_screen)
+        loading_screen.join()
         logging.info("Done loading, took %f seconds", time.time() - t_start)
 
     def start(self):
