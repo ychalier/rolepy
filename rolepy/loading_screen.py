@@ -2,6 +2,7 @@ import time
 import random
 import threading
 import pygame
+import rolepy
 from rolepy.engine.core.globals import SPRITE_SIZE
 
 
@@ -44,6 +45,7 @@ class LoadingScreen(threading.Thread):
         for key, value in kwargs.items():
             self.settings[key] = value
         self.build_background()
+        self.t_start = 0
 
     def build_background(self):
         """Create the background surface of the loading screen, with some
@@ -98,6 +100,26 @@ class LoadingScreen(threading.Thread):
             self.settings["bar_height"] - 2
         )
         pygame.draw.rect(self.background, self.settings["background_base_color"], rect)
+        self.background.blit(self.font_small.render(
+            rolepy.__title__,
+            True,
+            self.settings["text_color"]
+        ), (10, 10))
+        self.background.blit(self.font_small.render(
+            "Version: %s" % rolepy.__version__,
+            True,
+            self.settings["text_color"]
+        ), (10, 30))
+        self.background.blit(self.font_small.render(
+            "Author: %s (%s)" % (rolepy.__author__, rolepy.__email__),
+            True,
+            self.settings["text_color"]
+        ), (10, 50))
+        self.background.blit(self.font_small.render(
+            "GitHub: %s" % rolepy.__github__,
+            True,
+            self.settings["text_color"]
+        ), (10, 70))
 
     def blit(self):
         """Blits background and foreground elements onto the screen."""
@@ -127,6 +149,12 @@ class LoadingScreen(threading.Thread):
             self.settings["bar_height"]
         )
         pygame.draw.rect(self.screen, self.settings["text_color"], rect)
+        elapsed = time.time() - self.t_start
+        time_surface = self.font_small.render(
+            "Loading time: %.3fs" % elapsed, True,
+            self.settings["text_color"]
+        )
+        self.screen.blit(time_surface, (10, 90))
         pygame.display.flip()
 
     def done_step(self):
@@ -152,5 +180,7 @@ class LoadingScreen(threading.Thread):
 
     def run(self):
         """Main thread loop."""
+        self.t_start = time.time()
         while self.progress < self.steps:
             time.sleep(.01)
+            self.blit()
