@@ -15,6 +15,7 @@ class World:
         self.zones = list()
         self.zones_map = dict()
         self.player = Player()
+        self.modified = list()
 
     def generate(self, x, y):
         """Load the generated terrain at a given position."""
@@ -35,19 +36,22 @@ class World:
         return None
 
     def to_dict(self):
+        terrain_list = list()
+        for position in self.modified:
+            d = {
+                "x": position.x,
+                "y": position.y,
+                "l": [
+                    layer.value for layer in self.terrain[position]
+                ]
+            }
+            zone = self.zones_map.get(position, None)
+            if zone is not None:
+                d["z"] = zone
+            terrain_list.append(d)
         return {
             "seed": self.generator.seed,
-            "terrain": [
-                {
-                    "x": position.x,
-                    "y": position.y,
-                    "l": [
-                        layer.value for layer in layers
-                    ],
-                    "z": self.zones_map.get(position, None)
-                }
-                for position, layers in self.terrain.items()
-            ]
+            "terrain": terrain_list
         }
 
     def from_dict(self, d):
