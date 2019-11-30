@@ -99,6 +99,7 @@ class Game:
         logging.info("Saving to %s", os.path.join(os.getcwd(), self.settings.save_file))
         with open(self.settings.save_file, "w") as outfile:
             json.dump(self.to_dict(), outfile)
+        self.settings.save()
 
     def start(self):
         """Once loaded, setup the window and start the main routine."""
