@@ -42,6 +42,20 @@ class Behavior:
             "reset": self.reset
         }
 
+    def from_dict(self, d):
+        self.text_line = d["text_line"]
+        self.force_interaction = d["force_interaction"]
+        self.movement_style = MovementStyle(d["movement_style"])
+        self.max_time_between_movements = d["max_time_between_movements"]
+        self.min_time_between_movements = d["min_time_between_movements"]
+        self.anchor.from_dict(d["anchor"])
+        self.reset = d["reset"]
+        for answer in d["proposed_answers"]:
+            self.proposed_answers.append({
+                "text": answer["text"],
+                "trigger": Trigger(answer["trigger"])
+            })
+
     def take_action(self, entity):
         """Elementary step of autonomous decision making from the entity."""
         if self.movement_style == MovementStyle.RANDOM:

@@ -1,3 +1,7 @@
+from rolepy.engine.entities import Behavior
+from rolepy.engine.events.enums import Trigger
+
+
 class Intellect:
     """Automaton representation of an entity brain"""
 
@@ -42,3 +46,12 @@ class Intellect:
             "states": state_list,
             "transitions": transition_list
         }
+
+    def from_dict(self, d):
+        self.current_state = d["current_state"]
+        for state in d["states"]:
+            self.states[state["key"]] = Behavior()
+            self.states[state["key"]].from_dict(state)
+        for transition in d["transitions"]:
+            self.transitions.setdefault(transition["start"], dict())
+            self.transitions[transition["start"]][Trigger(transition["trigger"])] = transition["end"]

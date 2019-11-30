@@ -80,3 +80,7 @@ class Position:
             "x": self.x,
             "y": self.y
         }
+
+    def from_dict(self, d):
+        self.x = d["x"]
+        self.y = d["y"]

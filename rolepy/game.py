@@ -45,8 +45,12 @@ class Game:
     def to_dict(self):
         return {
             "world": self.world.to_dict(),
-            "entities": self.entity_manager.to_dict()
+            "population": self.entity_manager.to_dict()
         }
+
+    def from_dict(self, d):
+        self.world.from_dict(d["world"])
+        self.entity_manager.from_dict(d["population"])
 
     def load(self):
         """Loads components of the game into the RAM."""
@@ -65,8 +69,11 @@ class Game:
         self.entity_manager.load(self.camera, self.population, self.event_manager, loading_screen)
         loading_screen.join()
         logging.info("Done loading, took %f seconds", time.time() - t_start)
-        with open("save.json", 'w') as outfile:
-            json.dump(self.to_dict(), outfile)
+        # with open("save.json", 'w') as outfile:
+        #     json.dump(self.to_dict(), outfile)
+        with open("save.json", "r") as infile:
+            save_dict = json.load(infile)
+            self.from_dict(save_dict)
 
     def start(self):
         """Once loaded, setup the window and start the main routine."""

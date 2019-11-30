@@ -33,6 +33,11 @@ class Entity:
             "intellect": self.intellect.to_dict()
         }
 
+    def from_dict(self, d):
+        self.identifier = d["id"]
+        self.attributes.from_dict(d["attributes"])
+        self.intellect.from_dict(d["intellect"])
+
     def take_action(self):
         """Elementary step of autonomous decision making from the entity."""
         self.intellect.get().take_action(self)

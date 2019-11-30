@@ -43,3 +43,13 @@ class EntityAttributes:
             "last_movement": self.last_movement,
             "next_movement": self.next_movement
         }
+
+    def from_dict(self, d):
+        self.texture = EntityTexture(d["texture"])
+        self.position.from_dict(d["position"])
+        self.speed = d["speed"]
+        self.direction = Ordinal(d["direction"])
+        self.posture = Posture(d["posture"])
+        self.state = EntityState(d["state"])
+        self.last_movement = d["last_movement"]
+        self.next_movement = d["next_movement"]

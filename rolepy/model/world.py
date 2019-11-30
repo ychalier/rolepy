@@ -2,6 +2,7 @@ from rolepy.generate import WorldGenerator
 from rolepy.generate.biomes import Biome
 from rolepy.generate.biomes import Zone
 from rolepy.engine.core.structs import Position
+from rolepy.engine.terrain import TerrainTexture
 from rolepy.model.player import Player
 
 
@@ -23,21 +24,41 @@ class World:
         """If known, return the name of the zone at a given position."""
         x = round(x_float)
         y = round(y_float)
-        if self.generator.biome_map[y, x] == Biome.PLAIN:
+        biome = self.generator.biome_map.get((y, x), None)
+        if biome is None:
+            self.generator.biome_map.build([(y, x)])
+            biome = self.generator.biome_map[y, x]
+        if biome == Biome.PLAIN:
             return Zone(Biome.PLAIN)
         if Position(x, y) in self.zones_map:
             return self.zones_map[Position(x, y)]
         return None
 
     def to_dict(self):
-        return [
-            {
-                "x": position.x,
-                "y": position.y,
-                "l": [
-                    layer.value for layer in layers
-                ],
-                "z": self.zones_map.get(position, None)
-            }
-            for position, layers in self.terrain.items()
-        ]
+        return {
+            "seed": self.generator.seed,
+            "terrain": [
+                {
+                    "x": position.x,
+                    "y": position.y,
+                    "l": [
+                        layer.value for layer in layers
+                    ],
+                    "z": self.zones_map.get(position, None)
+                }
+                for position, layers in self.terrain.items()
+            ]
+        }
+
+    def from_dict(self, d):
+        self.generator = WorldGenerator(d["seed"])
+        for tile in d["terrain"]:
+            position = Position(tile["x"], tile["y"])
+            layers = [
+                TerrainTexture(layer)
+                for layer in tile["l"]
+            ]
+            zone = d.get("z", None)
+            self.terrain[position] = layers
+            if zone is not None:
+                self.zones_map[position] = zone
