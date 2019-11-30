@@ -64,8 +64,9 @@ class Game:
         """Loads components of the game into the RAM."""
         logging.info("Loading game")
         t_start = time.time()
-        loading_screen = LoadingScreen(self.screen, 3)
+        loading_screen = LoadingScreen(self.screen, 4)
         loading_screen.start()
+        loading_screen.next_step("Loading save", 0)
         save_dict = dict()
         if os.path.isfile(self.settings.save_file):
             logging.info("Loading save at %s", os.path.join(os.getcwd(), self.settings.save_file))
@@ -79,6 +80,7 @@ class Game:
             for entity in population.values():
                 self.entity_manager.add(entity)
             self.entity_manager.set_player(population["__player__"])
+        loading_screen.done_step()
         logging.debug("Loading sprites")
         self.tile_manager.load(loading_screen)
         logging.debug("Loading interfaces")
@@ -86,16 +88,12 @@ class Game:
         logging.debug("Loading world")
         self.world_surface_manager.load(loading_screen)
         logging.debug("Loading entities")
-        # self.population = Population(self.entity_manager)
-        # self.entity_manager.load(self.camera, self.population, self.event_manager, loading_screen)
         self.entity_manager.load(self.camera, self.event_manager, loading_screen)
         loading_screen.join()
         logging.info("Done loading, took %f seconds", time.time() - t_start)
-        # with open("save.json", 'w') as outfile:
-        #     json.dump(self.to_dict(), outfile)
-
 
     def save(self):
+        """Save the whole game state and the settings to disk."""
         logging.info("Saving to %s", os.path.join(os.getcwd(), self.settings.save_file))
         self.interface_manager[InterfaceManager.DEBUG_INTERFACE].message.update("Saving world")
         rendering = Render(self)
