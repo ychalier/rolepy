@@ -114,6 +114,7 @@ class Game:
         pygame.display.set_caption("RolePy")
         pygame.display.set_icon(pygame.image.load("assets/logo.png"))
         pygame.key.set_repeat(self.settings.key_repeat_delay)
+        pygame.mixer.music.load("assets/audio/music/theme.ogg")
 
     def quit(self):
         """Quit the game."""
@@ -126,6 +127,7 @@ class Game:
         logging.debug("Entering main loop")
         last_frame = time.time()
         fps = Fifo(10)
+        pygame.mixer.music.play(loops=-1)
         while self.running:
             self.input_manager.update()
             now = time.time()
