@@ -1,0 +1,255 @@
+  1 {
+  2   "definitions": {},
+  3   "$schema": "http://json-schema.org/draft-07/schema#",
+  4   "$id": "http://example.com/root.json",
+  5   "type": "object",
+  6   "required": [
+  7     "about",
+  8     "camera",
+  9     "population",
+ 10     "world"
+ 11   ],
+ 12   "properties": {
+ 13     "about": {
+ 14       "$id": "#/properties/about",
+ 15       "type": "object",
+ 16       "required": [
+ 17         "timestamp",
+ 18         "version"
+ 19       ],
+ 20       "properties": {
+ 21         "timestamp": {
+ 22           "$id": "#/properties/about/properties/timestamp",
+ 23           "type": "number"
+ 24         },
+ 25         "version": {
+ 26           "$id": "#/properties/about/properties/version",
+ 27           "type": "string",
+ 28           "pattern": "^(.*)$"
+ 29         }
+ 30       }
+ 31     },
+ 32     "camera": {
+ 33       "$id": "#/properties/camera",
+ 34       "type": "object",
+ 35       "required": [
+ 36         "y",
+ 37         "x"
+ 38       ],
+ 39       "properties": {
+ 40         "y": {
+ 41           "$id": "#/properties/camera/properties/y",
+ 42           "type": "integer"
+ 43         },
+ 44         "x": {
+ 45           "$id": "#/properties/camera/properties/x",
+ 46           "type": "integer"
+ 47         }
+ 48       }
+ 49     },
+ 50     "population": {
+ 51       "$id": "#/properties/population",
+ 52       "type": "object",
+ 53       "required": [
+ 54         "entities",
+ 55         "player"
+ 56       ],
+ 57       "properties": {
+ 58         "entities": {
+ 59           "$id": "#/properties/population/properties/entities",
+ 60           "type": "array",
+ 61           "items": {
+ 62             "$id": "#/properties/population/properties/entities/items",
+ 63             "type": "object",
+ 64             "required": [
+ 65               "intellect",
+ 66               "id",
+ 67               "attributes"
+ 68             ],
+ 69             "properties": {
+ 70               "intellect": {
+ 71                 "$id": "#/properties/population/properties/entities/items/properties/intellect",
+ 72                 "type": "object",
+ 73                 "required": [
+ 74                   "states",
+ 75                   "current_state",
+ 76                   "transitions"
+ 77                 ],
+ 78                 "properties": {
+ 79                   "states": {
+ 80                     "$id": "#/properties/population/properties/entities/items/properties/intellect/properties/states",
+ 81                     "type": "array",
+ 82                     "items": {
+ 83                       "$id": "#/properties/population/properties/entities/items/properties/intellect/properties/states/items",
+ 84                       "type": "object",
+ 85                       "required": [
+ 86                         "force_interaction",
+ 87                         "movement_style",
+ 88                         "max_time_between_movements",
+ 89                         "min_time_between_movements",
+ 90                         "reset",
+ 91                         "proposed_answers",
+ 92                         "key",
+ 93                         "text_line",
+ 94                         "anchor"
+ 95                       ],
+ 96                       "properties": {
+ 97                         "force_interaction": {
+ 98                           "$id": "#/properties/population/properties/entities/items/properties/intellect/properties/states/items/properties/force_interaction",
+ 99                           "type": "boolean"
+100                         },
+101                         "movement_style": {
+102                           "$id": "#/properties/population/properties/entities/items/properties/intellect/properties/states/items/properties/movement_style",
+103                           "type": "integer"
+104                         },
+105                         "max_time_between_movements": {
+106                           "$id": "#/properties/population/properties/entities/items/properties/intellect/properties/states/items/properties/max_time_between_movements",
+107                           "type": "integer"
+108                         },
+109                         "min_time_between_movements": {
+110                           "$id": "#/properties/population/properties/entities/items/properties/intellect/properties/states/items/properties/min_time_between_movements",
+111                           "type": "integer"
+112                         },
+113                         "reset": {
+114                           "$id": "#/properties/population/properties/entities/items/properties/intellect/properties/states/items/properties/reset",
+115                           "type": "boolean"
+116                         },
+117                         "proposed_answers": {
+118                           "$id": "#/properties/population/properties/entities/items/properties/intellect/properties/states/items/properties/proposed_answers",
+119                           "type": "array"
+120                         },
+121                         "key": {
+122                           "$id": "#/properties/population/properties/entities/items/properties/intellect/properties/states/items/properties/key",
+123                           "type": "integer"
+124                         },
+125                         "text_line": {
+126                           "$id": "#/properties/population/properties/entities/items/properties/intellect/properties/states/items/properties/text_line",
+127                           "type": "string",
+128                           "pattern": "^(.*)$"
+129                         },
+130                         "anchor": {
+131                           "$id": "#/properties/population/properties/entities/items/properties/intellect/properties/states/items/properties/anchor",
+132                           "type": "object",
+133                           "required": [
+134                             "y",
+135                             "x"
+136                           ],
+137                           "properties": {
+138                             "y": {
+139                               "$id": "#/properties/population/properties/entities/items/properties/intellect/properties/states/items/properties/anchor/properties/y",
+140                               "type": "integer"
+141                             },
+142                             "x": {
+143                               "$id": "#/properties/population/properties/entities/items/properties/intellect/properties/states/items/properties/anchor/properties/x",
+144                               "type": "integer"
+145                             }
+146                           }
+147                         }
+148                       }
+149                     }
+150                   },
+151                   "current_state": {
+152                     "$id": "#/properties/population/properties/entities/items/properties/intellect/properties/current_state",
+153                     "type": "integer"
+154                   },
+155                   "transitions": {
+156                     "$id": "#/properties/population/properties/entities/items/properties/intellect/properties/transitions",
+157                     "type": "array"
+158                   }
+159                 }
+160               },
+161               "id": {
+162                 "$id": "#/properties/population/properties/entities/items/properties/id",
+163                 "type": "integer"
+164               },
+165               "attributes": {
+166                 "$id": "#/properties/population/properties/entities/items/properties/attributes",
+167                 "type": "object",
+168                 "required": [
+169                   "position",
+170                   "state",
+171                   "next_movement",
+172                   "posture",
+173                   "speed",
+174                   "texture",
+175                   "last_movement",
+176                   "direction"
+177                 ],
+178                 "properties": {
+179                   "position": {
+180                     "$id": "#/properties/population/properties/entities/items/properties/attributes/properties/position",
+181                     "type": "object",
+182                     "required": [
+183                       "y",
+184                       "x"
+185                     ],
+186                     "properties": {
+187                       "y": {
+188                         "$id": "#/properties/population/properties/entities/items/properties/attributes/properties/position/properties/y",
+189                         "type": "integer"
+190                       },
+191                       "x": {
+192                         "$id": "#/properties/population/properties/entities/items/properties/attributes/properties/position/properties/x",
+193                         "type": "integer"
+194                       }
+195                     }
+196                   },
+197                   "state": {
+198                     "$id": "#/properties/population/properties/entities/items/properties/attributes/properties/state",
+199                     "type": "integer"
+200                   },
+201                   "next_movement": {
+202                     "$id": "#/properties/population/properties/entities/items/properties/attributes/properties/next_movement",
+203                     "type": "integer"
+204                   },
+205                   "posture": {
+206                     "$id": "#/properties/population/properties/entities/items/properties/attributes/properties/posture",
+207                     "type": "integer"
+208                   },
+209                   "speed": {
+210                     "$id": "#/properties/population/properties/entities/items/properties/attributes/properties/speed",
+211                     "type": "integer"
+212                   },
+213                   "texture": {
+214                     "$id": "#/properties/population/properties/entities/items/properties/attributes/properties/texture",
+215                     "type": "integer"
+216                   },
+217                   "last_movement": {
+218                     "$id": "#/properties/population/properties/entities/items/properties/attributes/properties/last_movement",
+219                     "type": "integer"
+220                   },
+221                   "direction": {
+222                     "$id": "#/properties/population/properties/entities/items/properties/attributes/properties/direction",
+223                     "type": "integer"
+224                   }
+225                 }
+226               }
+227             }
+228           }
+229         },
+230         "player": {
+231           "$id": "#/properties/population/properties/player",
+232           "type": "integer"
+233         }
+234       }
+235     },
+236     "world": {
+237       "$id": "#/properties/world",
+238       "type": "object",
+239       "required": [
+240         "seed",
+241         "terrain"
+242       ],
+243       "properties": {
+244         "seed": {
+245           "$id": "#/properties/world/properties/seed",
+246           "type": "integer"
+247         },
+248         "terrain": {
+249           "$id": "#/properties/world/properties/terrain",
+250           "type": "array"
+251         }
+252       }
+253     }
+254   }
+255 }

@@ -31,3 +31,25 @@ class EntityAttributes:
             AttributeChangeEvent(attribute),
             value=value
         )
+
+    def to_dict(self):
+        return {
+            "texture": self.texture.value,
+            "position": self.position.target().to_dict(),
+            "speed": self.speed,
+            "direction": self.direction.value,
+            "posture": Posture.REST.value,
+            "state": EntityState.IDLE.value,
+            "last_movement": self.last_movement,
+            "next_movement": self.next_movement
+        }
+
+    def from_dict(self, d):
+        self.texture = EntityTexture(d["texture"])
+        self.position.from_dict(d["position"])
+        self.speed = d["speed"]
+        self.direction = Ordinal(d["direction"])
+        self.posture = Posture(d["posture"])
+        self.state = EntityState(d["state"])
+        self.last_movement = d["last_movement"]
+        self.next_movement = d["next_movement"]

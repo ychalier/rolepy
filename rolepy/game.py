@@ -1,5 +1,7 @@
 import logging
+import json
 import time
+import os
 import pygame
 import pygame.locals
 from rolepy.engine.core.structs import Fifo
@@ -17,6 +19,7 @@ from rolepy.model import World
 from rolepy.model import Population
 from rolepy.generate import DetectZone
 from rolepy import LoadingScreen
+import rolepy
 
 
 class Game:
@@ -41,12 +44,43 @@ class Game:
             self.camera.copy()
         )
 
+    def to_dict(self):
+        return {
+            "world": self.world.to_dict(),
+            "population": self.entity_manager.to_dict(),
+            "camera": self.camera.to_dict(),
+            "about": {
+                "version": rolepy.__version__,
+                "timestamp": time.time()
+            }
+        }
+
+    def from_dict(self, d):
+        self.world.from_dict(d["world"])
+        self.entity_manager.from_dict(d["population"])
+        self.camera.from_dict(d["camera"])
+
     def load(self):
         """Loads components of the game into the RAM."""
         logging.info("Loading game")
         t_start = time.time()
-        loading_screen = LoadingScreen(self.screen, 3)
+        loading_screen = LoadingScreen(self.screen, 4)
         loading_screen.start()
+        loading_screen.next_step("Loading save", 0)
+        save_dict = dict()
+        if os.path.isfile(self.settings.save_file):
+            logging.info("Loading save at %s", os.path.join(os.getcwd(), self.settings.save_file))
+            with open(self.settings.save_file, "r") as infile:
+                save_dict = json.load(infile)
+                self.from_dict(save_dict)
+        else:
+            logging.info("No save file found!")
+            # TODO: replace with with entity  generation
+            population = Population(self.entity_manager)
+            for entity in population.values():
+                self.entity_manager.add(entity)
+            self.entity_manager.set_player(population["__player__"])
+        loading_screen.done_step()
         logging.debug("Loading sprites")
         self.tile_manager.load(loading_screen)
         logging.debug("Loading interfaces")
@@ -54,10 +88,21 @@ class Game:
         logging.debug("Loading world")
         self.world_surface_manager.load(loading_screen)
         logging.debug("Loading entities")
-        self.population = Population(self.entity_manager)
-        self.entity_manager.load(self.camera, self.population, self.event_manager, loading_screen)
+        self.entity_manager.load(self.camera, self.event_manager, loading_screen)
         loading_screen.join()
         logging.info("Done loading, took %f seconds", time.time() - t_start)
+
+    def save(self):
+        """Save the whole game state and the settings to disk."""
+        logging.info("Saving to %s", os.path.join(os.getcwd(), self.settings.save_file))
+        self.interface_manager[InterfaceManager.DEBUG_INTERFACE].message.update("Saving world")
+        rendering = Render(self)
+        rendering.start()
+        rendering.join()
+        with open(self.settings.save_file, "w") as outfile:
+            json.dump(self.to_dict(), outfile)
+        self.settings.save()
+        self.interface_manager[InterfaceManager.DEBUG_INTERFACE].message.update("")
 
     def start(self):
         """Once loaded, setup the window and start the main routine."""
@@ -74,6 +119,7 @@ class Game:
         """Quit the game."""
         logging.info("Exiting from QUIT event")
         self.running = False
+        self.save()
 
     def main(self):
         """Main routine of the game."""

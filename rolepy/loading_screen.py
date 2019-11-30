@@ -142,6 +142,7 @@ class LoadingScreen(threading.Thread):
         if self.sub_steps > 0 and self.steps > 0:
             sub_progress = self.sub_progress / self.sub_steps / self.steps
         progress += sub_progress
+        progress = min(progress, 1)
         rect = pygame.Rect(
             int(.5 * self.width * (1 - self.settings["bar_width"])),
             self.height // 2 - self.settings["bar_height"] // 2,

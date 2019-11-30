@@ -6,6 +6,7 @@ from rolepy.engine.events.implemented import TriggerEvent
 from rolepy.engine.events.implemented import InteractionEvent
 from rolepy.engine.events.implemented import DialogCloseEvent
 from rolepy.engine.events.enums import Trigger
+from rolepy.engine.entities import Entity
 
 
 def index_entity_position(position):
@@ -30,15 +31,24 @@ class EntityManager:
         self.center = None
         self.player = None
 
-    def load(self, camera, population, event_manager, loading_screen):
-        """Load entities from a population and setup event listeners."""
-        loading_screen.next_step("Loading entities", len(population) + 2)
-        self.center = camera.target()
-        for entity in population.values():
-            loading_screen.next_sub_step("Loading %s" % entity)
+    def to_dict(self):
+        return {
+            "player": self.player.identifier,
+            "entities": [e.to_dict() for e in self.entities]
+        }
+
+    def from_dict(self, d):
+        for e in d["entities"]:
+            entity = Entity(self, e["id"])
+            entity.from_dict(e)
             self.add(entity)
-            loading_screen.done_sub_step()
-        self.set_player(population["__player__"])
+            if e["id"] == d["player"]:
+                self.player = entity
+
+    def load(self, camera, event_manager, loading_screen):
+        """Load entities from a population and setup event listeners."""
+        loading_screen.next_step("Loading entities", 2)
+        self.center = camera.target()
         loading_screen.next_sub_step("Building registry")
         self.update_registry()
         loading_screen.done_sub_step()

@@ -26,10 +26,16 @@ The :ref:`entities module` handles the representation of the entities in the gam
 
 The :ref:`graphics module` contains the rendering procedures that gather surfaces provided by the different modules and effectively display them on the screen.
 
+Serialization
+-------------
+
+Several objects have a ``.to_dict(self)`` and a ``.from_dict(self, dict)`` methods. The first one outputs a dictionnary JSON-compatible that contains all currents meaningful attributes of the object. The second one takes such a dictionnary as argument and sets the attributes of the object. This is how the game saving/loading system works.
+
+Saving format is currently a JSON file, following this schema (:download:`schema.json`).
+
 Upcoming Features
 -----------------
 
-- Add serialization of game current state for saving/loading the game
 - Add a module for the specific representation of *structures*
 - Fasten the terrain rendering, as ``WorldSurface`` current switch causes noticeable lag spikes
 - Load resources as a single sprite sheet
