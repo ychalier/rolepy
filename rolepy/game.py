@@ -19,6 +19,7 @@ from rolepy.model import World
 from rolepy.model import Population
 from rolepy.generate import DetectZone
 from rolepy import LoadingScreen
+import rolepy
 
 
 class Game:
@@ -47,7 +48,11 @@ class Game:
         return {
             "world": self.world.to_dict(),
             "population": self.entity_manager.to_dict(),
-            "camera": self.camera.to_dict()
+            "camera": self.camera.to_dict(),
+            "about": {
+                "version": rolepy.__version__,
+                "timestamp": time.time()
+            }
         }
 
     def from_dict(self, d):
