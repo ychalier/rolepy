@@ -1,6 +1,7 @@
 import logging
 import json
 import time
+import os
 import pygame
 import pygame.locals
 from rolepy.engine.core.structs import Fifo
@@ -58,6 +59,19 @@ class Game:
         t_start = time.time()
         loading_screen = LoadingScreen(self.screen, 3)
         loading_screen.start()
+        save_dict = dict()
+        if os.path.isfile(self.settings.save_file):
+            logging.info("Loading save at %s", os.path.join(os.getcwd(), self.settings.save_file))
+            with open(self.settings.save_file, "r") as infile:
+                save_dict = json.load(infile)
+                self.from_dict(save_dict)
+        else:
+            logging.info("No save file found!")
+            # TODO: replace with with entity  generation
+            population = Population(self.entity_manager)
+            for entity in population.values():
+                self.entity_manager.add(entity)
+            self.entity_manager.set_player(population["__player__"])
         logging.debug("Loading sprites")
         self.tile_manager.load(loading_screen)
         logging.debug("Loading interfaces")
@@ -65,15 +79,19 @@ class Game:
         logging.debug("Loading world")
         self.world_surface_manager.load(loading_screen)
         logging.debug("Loading entities")
-        self.population = Population(self.entity_manager)
-        self.entity_manager.load(self.camera, self.population, self.event_manager, loading_screen)
+        # self.population = Population(self.entity_manager)
+        # self.entity_manager.load(self.camera, self.population, self.event_manager, loading_screen)
+        self.entity_manager.load(self.camera, self.event_manager, loading_screen)
         loading_screen.join()
         logging.info("Done loading, took %f seconds", time.time() - t_start)
         # with open("save.json", 'w') as outfile:
         #     json.dump(self.to_dict(), outfile)
-        with open("save.json", "r") as infile:
-            save_dict = json.load(infile)
-            self.from_dict(save_dict)
+
+
+    def save(self):
+        logging.info("Saving to %s", os.path.join(os.getcwd(), self.settings.save_file))
+        with open(self.settings.save_file, "w") as outfile:
+            json.dump(self.to_dict(), outfile)
 
     def start(self):
         """Once loaded, setup the window and start the main routine."""
@@ -90,6 +108,7 @@ class Game:
         """Quit the game."""
         logging.info("Exiting from QUIT event")
         self.running = False
+        self.save()
 
     def main(self):
         """Main routine of the game."""

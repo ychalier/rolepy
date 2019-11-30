@@ -8,6 +8,7 @@ class Settings:
         self.resolution = 32 * 29, 32 * 17
         self.max_fps = None
         self.key_repeat_delay = 10  # ms
+        self.save_file = "save.json"
 
     def load(self, input_file):
         """Read the configuration file and update settings values."""
@@ -25,6 +26,8 @@ class Settings:
                     self.max_fps = None
             elif keyword.lower() == "key_repeat_delay":
                 self.key_repeat_delay = int(value)
+            elif keyword.lower() == "save_file":
+                self.save_file = value
 
     def save(self, output_file):
         """Write the current configuration to a file"""
