@@ -46,12 +46,14 @@ class Game:
     def to_dict(self):
         return {
             "world": self.world.to_dict(),
-            "population": self.entity_manager.to_dict()
+            "population": self.entity_manager.to_dict(),
+            "camera": self.camera.to_dict()
         }
 
     def from_dict(self, d):
         self.world.from_dict(d["world"])
         self.entity_manager.from_dict(d["population"])
+        self.camera.from_dict(d["camera"])
 
     def load(self):
         """Loads components of the game into the RAM."""
