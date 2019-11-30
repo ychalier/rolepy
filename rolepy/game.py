@@ -97,9 +97,14 @@ class Game:
 
     def save(self):
         logging.info("Saving to %s", os.path.join(os.getcwd(), self.settings.save_file))
+        self.interface_manager[InterfaceManager.DEBUG_INTERFACE].message.update("Saving world")
+        rendering = Render(self)
+        rendering.start()
+        rendering.join()
         with open(self.settings.save_file, "w") as outfile:
             json.dump(self.to_dict(), outfile)
         self.settings.save()
+        self.interface_manager[InterfaceManager.DEBUG_INTERFACE].message.update("")
 
     def start(self):
         """Once loaded, setup the window and start the main routine."""
